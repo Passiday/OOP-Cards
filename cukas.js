@@ -1,9 +1,9 @@
 class CukasGame {
-    players: []; // 2-6 players
-    deck: null; // CardSet
-    trump: null; // Card
-    attack: []; // Attack cards
-    defence: []; // Defence cards
+    players = []; // 2-6 players
+    deck = null; // CardSet
+    trump = null; // Card
+    attack = []; // Attack cards
+    defence = []; // Defence cards
 
     gameState;
     activePlayerId;
@@ -36,7 +36,7 @@ CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
 
 class CukasPlayer {
-    hand: null; // CardSet
+    hand = null; // CardSet
 
     attack(gameInfo) {
         // Returns array of attack cards
