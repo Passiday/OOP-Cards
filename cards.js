@@ -48,6 +48,13 @@ class CardSet {
     // Fills it with <count> random cards from the current set
     // Removes these cards from the current set
     // Returns the new set
+    let cardSet = new CardSet();
+    for(let x = 0; x < count; x++) {
+      let val = Math.floor(Math.random()*this.cards.length);
+      cardSet.addCard(this.cards[val]);
+      this.cards.splice(val, 1);
+    }
+    return cardSet;
   }
 }
 
