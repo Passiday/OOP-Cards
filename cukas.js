@@ -28,11 +28,11 @@ class CukasGame {
         this.gameState = STATE_GAME;
     }
 ​
-    //Static method that copies a game for that player
+    //method that return a ready-to-send info about the situation about the game
     createPerspective(playerId) {
-        var otherHands=[];
-        for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {
-          otherHands.push(this.players[i]);
+        var otherHands=[];//int[] contains number of cards for the next players in order
+        for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {//fills otherHands array
+          otherHands.push(this.players[i].count);
         }
         var playersState=CukasPlayerPerspective.STATE_WAITING;
         if(playerId==this.activePlayerId) playersState = CukasPlayerPerspective.STATE_ATTACKING;
@@ -65,8 +65,6 @@ class CukasGame {
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
         const defence = this.players[defencePlayerId].defend(this.getGameInfo());
-        //console.log(attack);
-        //console.log(defence);
         if(defence == null) { //if null, just pick up the attack cards
             this.players[defencePlayerId].deck.push(attack);
             if(this.players[attackPlayerId].hand.length - 6 < 0) {
@@ -140,14 +138,14 @@ class CukasPlayer {
         return null;
     }
 }
-class CukasPlayerPerspective {
+class CukasPlayerPerspective {//container for info about specific users
   hand;//current players hand (CardSet)
   attack;//cards attacking
   defence;//cards defending
   otherHandCount;//amount of cards of other players
-  trump;
+/*Remove when trump card is sent properly to all users*/  trump;//trump card
   state;
-  constructor(iHand, iAttack, iDefence, iOtherHandCount, iTrump, iState){
+  constructor(iHand, iAttack, iDefence, iOtherHandCount, iTrump, iState){//i as in input NOT apple products
     hand=iHand;
     attack=iAttack;
     defence=iDefence;
@@ -156,6 +154,6 @@ class CukasPlayerPerspective {
     state=iState;
   }
 }
-CukasPlayerPerspective.STATE_ATTACKING = 0;
+CukasPlayerPerspective.STATE_ATTACKING = 0;//various states
 CukasPlayerPerspective.STATE_DEFENDING = 1;
 CukasPlayerPerspective.STATE_WAITING = 2;
