@@ -11,9 +11,37 @@ class Card {
       this.rank = rank;
     }
   }
-
+  getSuitSymbol() {
+    switch(this.suit) {
+      case Card.SUIT_CLUBS:
+      return "♣";
+      case Card.SUIT_DIAMONDS:
+      return "♦";
+      case Card.SUIT_HEARTS:
+      return "♥";
+      case Card.SUIT_SPADES:
+      return "♠";
+    }
+  }
   toString() {
-    return `Suit: ${this.suit}, rank: ${this.rank}`;
+    if(this.isNormal()) {
+      if(this.rank < 11) {
+        return this.rank + this.getSuitSymbol();
+      } else {
+        switch(this.rank) {
+          case 11:
+            return "J" + this.getSuitSymbol();
+          case 12:
+            return "Q" + this.getSuitSymbol();
+          case 13:
+            return "K" + this.getSuitSymbol();
+          case 14:
+            return "A" + this.getSuitSymbol();
+        }
+      }
+    } else {
+      return "★";
+    }
   }
 
   isNormal() {
