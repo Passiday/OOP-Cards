@@ -44,6 +44,10 @@ class Card {
     }
   }
 
+  log() {
+    console.log(this.toString().replace("♥", "%c♥").replace("♦", "%♦"), "color: red")
+  }
+
   isNormal() {
     return this.type == Card.TYPE_NORMAL;
   }
