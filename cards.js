@@ -25,7 +25,7 @@ class Card {
   }
   toString() {
     if(this.isNormal()) {
-      if(this.rank < 11) {
+      if(this.rank < 11 && this.rank > 1) {
         return this.rank + this.getSuitSymbol();
       } else {
         switch(this.rank) {
@@ -35,7 +35,7 @@ class Card {
             return "Q" + this.getSuitSymbol();
           case 13:
             return "K" + this.getSuitSymbol();
-          case 14:
+          case 1:
             return "A" + this.getSuitSymbol();
         }
       }
@@ -91,6 +91,17 @@ class CardSet {
       this.cards.splice(val, 1);
     }
     return cardSet;
+  }
+
+  toString() {
+    let str = "";
+    for(let x = 0; x < this.cards.length; x++) {
+      if(x<this.cards.length-1)
+        str = str + this.cards[x].toString() + ", ";
+      else
+        str = str + this.cards[x].toString();
+    }
+    return str;
   }
 }
 
