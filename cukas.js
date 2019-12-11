@@ -7,7 +7,6 @@ class CukasGame {
 ​
     gameState;
     activePlayerId;
-    turn = 0;
     turnPhase;
 ​
     //Constructor 1 - creates a regular game object with 2 to 6 players.
