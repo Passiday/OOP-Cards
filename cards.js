@@ -17,13 +17,13 @@ class Card {
       if(this.rank < 11) {
         switch(this.suit) {
           case Card.SUIT_CLUBS:
-          return rank + "♣";
+          return this.rank + "♣";
           case Card.SUIT_DIAMONDS:
-          return rank + "♦";
+          return this.rank + "♦";
           case Card.SUIT_HEARTS:
-          return rank + "♥";
+          return this.rank + "♥";
           case Card.SUIT_SPADES:
-          return rank + "♠";
+          return this.rank + "♠";
         }
       } else {
         switch(this.rank) {
