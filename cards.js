@@ -45,11 +45,9 @@ class Card {
   }
 
   log() {
-    let str = this.toString();
+    const str = this.toString();
     if(str.includes("♥") || str.includes("♦")) 
-      console.log(str.replace(/♥|♦/g, function(x) {
-        return "%c" + x;
-      }), "color: red")
+      console.log(str.replace(/♥|♦/g, "%c$&"), "color: red")
     else 
       console.log(str);
   }
