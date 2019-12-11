@@ -45,7 +45,10 @@ class Card {
   }
 
   log() {
-    console.log(this.toString().replace("♥", "%c♥").replace("♦", "%♦"), "color: red")
+    if(this.toString().includes("♥") || this.toString().includes("♦")) 
+      console.log(this.toString().replace("♥", "%c♥").replace("♦", "%♦"), "color: red")
+    else 
+      console.log(this.toString());
   }
 
   isNormal() {
