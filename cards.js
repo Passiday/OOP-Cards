@@ -6,7 +6,7 @@ class Card {
   
   constructor(type, suit, rank) {
     this.type = type;
-    if (type == Card.TYPE_NORMAL) {
+    if (type === Card.TYPE_NORMAL) {
       this.suit = suit;
       this.rank = rank;
     }
@@ -45,11 +45,11 @@ class Card {
   }
 
   isNormal() {
-    return this.type == Card.TYPE_NORMAL;
+    return this.type === Card.TYPE_NORMAL;
   }
 
   isJoker() {
-    return this.type == Card.TYPE_JOKER;
+    return this.type === Card.TYPE_JOKER;
   }
 }
 
@@ -84,6 +84,10 @@ class CardSet {
     }
     return cardSet;
   }
+
+  shuffle() {
+    return this.cards.sort(() => .5 - Math.random());
+  }
 }
 
 CardSet.standardPack = (withJokers) => {
@@ -104,4 +108,4 @@ CardSet.standardPack = (withJokers) => {
     cardSet.addCard(new Card(Card.TYPE_JOKER));  
   }
   return cardSet;
-}
+};
