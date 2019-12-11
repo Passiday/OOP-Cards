@@ -44,6 +44,14 @@ class Card {
     }
   }
 
+  log() {
+    const str = this.toString();
+    if(str.includes("♥") || str.includes("♦")) 
+      console.log(str.replace(/♥|♦/g, "%c$&"), "color: red")
+    else 
+      console.log(str);
+  }
+
   isNormal() {
     return this.type === Card.TYPE_NORMAL;
   }
