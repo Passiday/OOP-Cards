@@ -28,20 +28,17 @@ class CukasGame {
         this.gameState = STATE_GAME;
     }
 ​
-    //Static method that copies a games state
-    static CreateSnapshot(parent, state) {
-        var Snapshot=new CukasGame();
-        this.trump = parent.trump;
-        switch(state) {
-            case PHASE_ATTACK:
-                this.players = parent.players[parent.activePlayerId];
-                break;
-            case PHASE_DEFEND:
-                this.players = parent.players[(parent.activePlayerId + 1) % parent.players.length];
-                this.attack = parent.attack;
-                break;
+    //Static method that copies a game for that player
+    CreatePerspective(playerId) {
+        var otherHands=[];
+        for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {
+          otherHands.push(this.players[i]);
         }
-        return Snapshot;
+        var playersState=CukasPlayerPerspective.STATE_WAITING;
+        if(playerId==this.activePlayerId) playersState = CukasPlayerPerspective.STATE_ATTACKING;
+        if(playerId==(this.activePlayerId+1)%this.players.length) playersState = CukasPlayerPerspective.STATE_DEFENDING;
+        var Perspective=new CukasPlayerPerspective(this.players[playerId], this.attack, this.defence, otherHands, this.trump, playersState);
+        return Perspective;
     }
 ​
     getGameInfo() {
@@ -143,4 +140,22 @@ class CukasPlayer {
         return null;
     }
 }
-Collapse
+class CukasPlayerPerspective {
+  hand;//current players hand (CardSet)
+  attack;//cards attacking
+  defence;//cards defending
+  otherHandCount;//amount of cards of other players
+  trump;
+  state;
+  constructor(iHand, iAttack, iDefence, iOtherHandCount, iTrump, iState){
+    hand=iHand;
+    attack=iAttack;
+    defence=iDefence;
+    otherHandCount=iOtherHandCount;
+    trump=iTrump;
+    state=iState;
+  }
+}
+CukasPlayerPerspective.STATE_ATTACKING = 0;
+CukasPlayerPerspective.STATE_DEFENDING = 1;
+CukasPlayerPerspective.STATE_WAITING = 2;
