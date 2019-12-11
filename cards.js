@@ -29,13 +29,13 @@ class Card {
         return this.rank + this.getSuitSymbol();
       } else {
         switch(this.rank) {
-          case 11:
+          case Card.RANK_JACK:
             return "J" + this.getSuitSymbol();
-          case 12:
+          case Card.RANK_QUEEN:
             return "Q" + this.getSuitSymbol();
-          case 13:
+          case Card.RANK_KING:
             return "K" + this.getSuitSymbol();
-          case 1:
+          case Card.RANK_ACE:
             return "A" + this.getSuitSymbol();
         }
       }
@@ -60,6 +60,11 @@ class Card {
     return this.type == Card.TYPE_JOKER;
   }
 }
+
+Card.RANK_ACE = 1;
+Card.RANK_JACK = 11;
+Card.RANK_QUEEN = 12;
+Card.RANK_KING = 13;
 
 Card.TYPE_NORMAL = 0;
 Card.TYPE_JOKER = 1;
