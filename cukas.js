@@ -28,18 +28,20 @@ class CukasGame {
         this.gameState = STATE_GAME;
     }
 ​
-    //Constructor 2 - used for creating snapshots of the game
-    CukasGame(parent, state) {
+    //Static method that copies a games state
+    static CreateSnapshot(parent, state) {
+        var Snapshot=new CukasGame();
         this.trump = parent.trump;
         switch(state) {
             case PHASE_ATTACK:
-                this.players = parent.player[parent.activePlayerId];
+                this.players = parent.players[parent.activePlayerId];
                 break;
             case PHASE_DEFEND:
-                this.players = parent.player[(parent.activePlayerId + 1) % parent.players.length];
+                this.players = parent.players[(parent.activePlayerId + 1) % parent.players.length];
                 this.attack = parent.attack;
                 break;
         }
+        return Snapshot;
     }
 ​
     getGameInfo() {
@@ -142,7 +144,3 @@ class CukasPlayer {
     }
 }
 Collapse
-
-
-
-
