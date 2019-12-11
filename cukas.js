@@ -29,7 +29,7 @@ class CukasGame {
     }
 ​
     //Static method that copies a game for that player
-    CreatePerspective(playerId) {
+    createPerspective(playerId) {
         var otherHands=[];
         for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {
           otherHands.push(this.players[i]);
