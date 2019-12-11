@@ -11,72 +11,34 @@ class Card {
       this.rank = rank;
     }
   }
-
+  getSuitSymbol() {
+    switch(this.suit) {
+      case Card.SUIT_CLUBS:
+      return "♣";
+      case Card.SUIT_DIAMONDS:
+      return "♦";
+      case Card.SUIT_HEARTS:
+      return "♥";
+      case Card.SUIT_SPADES:
+      return "♠";
+    }
+  }
   toString() {
     if(this.isNormal()) {
       if(this.rank < 11) {
-        switch(this.suit) {
-          case Card.SUIT_CLUBS:
-          return this.rank + "♣";
-          case Card.SUIT_DIAMONDS:
-          return this.rank + "♦";
-          case Card.SUIT_HEARTS:
-          return this.rank + "♥";
-          case Card.SUIT_SPADES:
-          return this.rank + "♠";
-        }
+        return this.rank + this.getSuitSymbol();
       } else {
         switch(this.rank) {
           case 11:
-              switch(this.suit) {
-                case Card.SUIT_CLUBS:
-                return "J" + "♣";
-                case Card.SUIT_DIAMONDS:
-                return "J" + "♦";
-                case Card.SUIT_HEARTS:
-                return "J" + "♥";
-                case Card.SUIT_SPADES:
-                return "J" + "♠";
-              }
-              break;
+            return "J" + this.getSuitSymbol();
           case 12:
-              switch(this.suit) {
-                case Card.SUIT_CLUBS:
-                return "Q" + "♣";
-                case Card.SUIT_DIAMONDS:
-                return "Q" + "♦";
-                case Card.SUIT_HEARTS:
-                return "Q" + "♥";
-                case Card.SUIT_SPADES:
-                return "Q" + "♠";
-              }
-              break;
+            return "Q" + this.getSuitSymbol();
           case 13:
-            switch(this.suit) {
-              case Card.SUIT_CLUBS:
-              return "K" + "♣";
-              case Card.SUIT_DIAMONDS:
-              return "K" + "♦";
-              case Card.SUIT_HEARTS:
-              return "K" + "♥";
-              case Card.SUIT_SPADES:
-              return "K" + "♠";
-            }
-            break;
+            return "K" + this.getSuitSymbol();
           case 14:
-              switch(this.suit) {
-                case Card.SUIT_CLUBS:
-                return "A" + "♣";
-                case Card.SUIT_DIAMONDS:
-                return "A" + "♦";
-                case Card.SUIT_HEARTS:
-                return "A" + "♥";
-                case Card.SUIT_SPADES:
-                return "A" + "♠";
-              }
-              break;
+            return "A" + this.getSuitSymbol();
         }
-      } 
+      }
     } else {
       return "★";
     }
