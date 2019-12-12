@@ -11,7 +11,7 @@ class Card {
       this.rank = rank;
     }
   }
-  get suitSymbol() {
+  getSuitSymbol() {
     switch(this.suit) {
       case Card.SUIT_CLUBS:
       return "♣";
@@ -25,7 +25,7 @@ class Card {
   }
   toString() {
     if(this.isNormal()) {
-      let symbol=this.suitSymbol;
+      let symbol=this.getSuitSymbol();
       if(this.rank < 11) {
         return this.rank + symbol;
       } else {
@@ -60,8 +60,8 @@ class Card {
   isJoker() {
     return this.type == Card.TYPE_JOKER;
   }
-  static copy(card){
-    return new Card(card.type, card.suit, card.rank);
+  copy(){
+    return new Card(this.type, this.suit, this.rank);
   }
 }
 
@@ -84,11 +84,7 @@ class CardSet {
   }
 
   asArray(){
-    let returnable=[];
-    this.cards.forEach(function(card){
-      returnable.push(Card.copy(card));
-    });
-    return returnable;
+    return this.cards.map(x => new Card(x.type, x.suit, x.rank));
   }
 
   getRandomSet(count) {
@@ -104,9 +100,9 @@ class CardSet {
     }
     return cardSet;
   }
-  static copy(set){
+  copy(){
     let copied=new CardSet();
-    set.forEach(function(card){
+    this.forEach(function(card){
       copied.add(Card.copy(card));
     });
     return copied;
