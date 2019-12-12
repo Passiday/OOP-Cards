@@ -65,6 +65,11 @@ class Card {
   }
 }
 
+Card.RANK_ACE = 1;
+Card.RANK_JACK = 11;
+Card.RANK_QUEEN = 12;
+Card.RANK_KING = 13;
+
 Card.TYPE_NORMAL = 0;
 Card.TYPE_JOKER = 1;
 Card.SUIT_HEARTS = 0;
@@ -106,6 +111,19 @@ class CardSet {
       copied.add(Card.copy(card));
     });
     return copied;
+  }
+  toString() {
+    return this.cards.join(", ");
+  }
+
+  log() {
+    const str = this.toString();
+    let arr = [];
+    for(var x = 0; x < (str.match(/♥|♦/g) || []).length; x++) {
+      arr.push("color:red");
+      arr.push("color:black");
+    }
+    console.log(str.replace(/♥|♦/g, "%c$&%c"), ...arr);
   }
 }
 
