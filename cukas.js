@@ -28,7 +28,7 @@ class CukasGame {
     }
 ​
     //method that return a ready-to-send info about the situation about the game
-    createPerspective(playerId) {
+    /*createPerspective(playerId) {
         var otherHands=[];//int[] contains number of cards for the next players in order
         for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {//fills otherHands array
           otherHands.push(this.players[i].count);
@@ -38,7 +38,7 @@ class CukasGame {
         if(playerId==(this.activePlayerId+1)%this.players.length) playersState = CukasPlayerPerspective.STATE_DEFENDING;
         var Perspective=new CukasPlayerPerspective(this.players[playerId], this.attack, this.defence, otherHands, this.trump, playersState);
         return Perspective;
-    }
+    }*/
 ​
     turn() {
         const attackPlayerId = this.activePlayerId;
@@ -133,12 +133,12 @@ class CukasPlayer {
         return null;
     }
 }
-class CukasPlayerPerspective {//container for info about specific users
+/*class CukasPlayerPerspective {//container for info about specific users
   hand;//current players hand (CardSet)
   attack;//cards attacking
   defence;//cards defending
   otherHandCount;//amount of cards of other players
-/*Remove when trump card is sent properly to all users*/  trump;//trump card
+  trump;//trump card
   state;
   constructor(iHand, iAttack, iDefence, iOtherHandCount, iTrump, iState){//i as in input NOT apple products
     hand=iHand;
@@ -152,3 +152,4 @@ class CukasPlayerPerspective {//container for info about specific users
 CukasPlayerPerspective.STATE_ATTACKING = 0;//various states
 CukasPlayerPerspective.STATE_DEFENDING = 1;
 CukasPlayerPerspective.STATE_WAITING = 2;
+*/
