@@ -40,10 +40,6 @@ class CukasGame {
         return Perspective;
     }
 ​
-    getGameInfo() {
-        return new CukasGame(this, this.turnPhase);
-    }
-​
     turn() {
         const attackPlayerId = this.activePlayerId;
         const defencePlayerId = (this.activePlayerId + 1) % this.players.length;
