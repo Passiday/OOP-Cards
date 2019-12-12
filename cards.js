@@ -3,7 +3,7 @@ class Card {
   type = Card.TYPE_NORMAL;
   style;
   back;
-  
+
   constructor(type, suit, rank) {
     this.type = type;
     if (type == Card.TYPE_NORMAL) {
@@ -11,7 +11,7 @@ class Card {
       this.rank = rank;
     }
   }
-  getSuitSymbol() {
+  get suitSymbol() {
     switch(this.suit) {
       case Card.SUIT_CLUBS:
       return "♣";
@@ -25,18 +25,19 @@ class Card {
   }
   toString() {
     if(this.isNormal()) {
+      let symbol=this.suitSymbol;
       if(this.rank < 11) {
-        return this.rank + this.getSuitSymbol();
+        return this.rank + symbol;
       } else {
         switch(this.rank) {
           case 11:
-            return "J" + this.getSuitSymbol();
+            return "J" + symbol;
           case 12:
-            return "Q" + this.getSuitSymbol();
+            return "Q" + symbol;
           case 13:
-            return "K" + this.getSuitSymbol();
+            return "K" + symbol;
           case 14:
-            return "A" + this.getSuitSymbol();
+            return "A" + symbol;
         }
       }
     } else {
@@ -46,9 +47,9 @@ class Card {
 
   log() {
     const str = this.toString();
-    if(str.includes("♥") || str.includes("♦")) 
+    if(str.includes("♥") || str.includes("♦"))
       console.log(str.replace(/♥|♦/g, "%c$&"), "color: red")
-    else 
+    else
       console.log(str);
   }
 
@@ -58,6 +59,9 @@ class Card {
 
   isJoker() {
     return this.type == Card.TYPE_JOKER;
+  }
+  static copy(card){
+    return new Card(card.type, card.suit, card.rank);
   }
 }
 
@@ -92,6 +96,13 @@ class CardSet {
     }
     return cardSet;
   }
+  static copy(set){
+    let copied=new CardSet();
+    set.forEach(function(card){
+      copied.add(Card.copy(card));
+    });
+    return copied;
+  }
 }
 
 CardSet.standardPack = (withJokers) => {
@@ -109,7 +120,7 @@ CardSet.standardPack = (withJokers) => {
   });
   if (withJokers) {
     cardSet.addCard(new Card(Card.TYPE_JOKER));
-    cardSet.addCard(new Card(Card.TYPE_JOKER));  
+    cardSet.addCard(new Card(Card.TYPE_JOKER));
   }
   return cardSet;
 }
