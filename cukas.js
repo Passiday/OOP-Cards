@@ -33,11 +33,14 @@ class CukasGame {
         for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {//fills otherHands array
           otherHands.push(this.players[i].count);
         }
-        var playersState=CukasPlayerPerspective.STATE_WAITING;
-        if(playerId==this.activePlayerId) playersState = CukasPlayerPerspective.STATE_ATTACKING;
-        if(playerId==(this.activePlayerId+1)%this.players.length) playersState = CukasPlayerPerspective.STATE_DEFENDING;
-        var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
-        return Perspective;
+        var playersState=0;
+        //CukasPlayerPerspective.STATE_WAITING;
+        if(playerId==this.activePlayerId) playersState = 1
+        //CukasPlayerPerspective.STATE_ATTACKING;
+        if(playerId==(this.activePlayerId+1)%this.players.length) playersState = 2;
+        //CukasPlayerPerspective.STATE_DEFENDING;
+        //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
+        return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
     }
 ​
     turn() {
@@ -133,6 +136,7 @@ class CukasPlayer {
         return null;
     }
 }
+/*
 class CukasPlayerPerspective {//container for info about specific users
   hand;//current players hand (CardSet)
   attack;//cards attacking
@@ -152,3 +156,4 @@ class CukasPlayerPerspective {//container for info about specific users
 CukasPlayerPerspective.STATE_ATTACKING = 0;//various states
 CukasPlayerPerspective.STATE_DEFENDING = 1;
 CukasPlayerPerspective.STATE_WAITING = 2;
+*/
