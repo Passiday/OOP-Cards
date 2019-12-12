@@ -25,17 +25,17 @@ class Card {
   }
   toString() {
     if(this.isNormal()) {
-      if(this.rank < 11) {
+      if(this.rank < 11 && this.rank > 1) {
         return this.rank + this.getSuitSymbol();
       } else {
         switch(this.rank) {
-          case 11:
+          case Card.RANK_JACK:
             return "J" + this.getSuitSymbol();
-          case 12:
+          case Card.RANK_QUEEN:
             return "Q" + this.getSuitSymbol();
-          case 13:
+          case Card.RANK_KING:
             return "K" + this.getSuitSymbol();
-          case 14:
+          case Card.RANK_ACE:
             return "A" + this.getSuitSymbol();
         }
       }
@@ -60,6 +60,11 @@ class Card {
     return this.type === Card.TYPE_JOKER;
   }
 }
+
+Card.RANK_ACE = 1;
+Card.RANK_JACK = 11;
+Card.RANK_QUEEN = 12;
+Card.RANK_KING = 13;
 
 Card.TYPE_NORMAL = 0;
 Card.TYPE_JOKER = 1;
@@ -109,6 +114,20 @@ class CardSet {
     let toBeAdded = count - this.cards.length;
     if (toBeAdded <= 0) return;
     this.cards = this.cards.concat(fromSet.takeTopCards(toBeAdded));
+  }
+
+  toString() {
+    return this.cards.join(", ");
+  }
+
+  log() {
+    const str = this.toString();
+    let arr = [];
+    for(var x = 0; x < (str.match(/♥|♦/g) || []).length; x++) {
+      arr.push("color:red");
+      arr.push("color:black");
+    }
+    console.log(str.replace(/♥|♦/g, "%c$&%c"), ...arr);
   }
 }
 
