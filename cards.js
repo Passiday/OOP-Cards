@@ -110,11 +110,7 @@ class CardSet {
     return cardSet;
   }
   copy(){
-    let copied=new CardSet();
-    this.forEach(function(card){
-      copied.add(Card.copy(card));
-    });
-    return copied;
+    return new CardSet(this.cards);
   }
   toString() {
     return this.cards.join(", ");
