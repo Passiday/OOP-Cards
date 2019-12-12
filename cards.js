@@ -105,14 +105,11 @@ class CardSet {
   log() {
     const str = this.toString();
     let arr = [];
-    for(let x = 0; x < (str.match(/♥|♦/g) || []).length*2; x++) {
-      if(x%2 == 0)
-        arr.push("color:red")
-      else
-        arr.push("color:black");
+    for(var x = 0; x < (str.match(/♥|♦/g) || []).length; x++) {
+      arr.push("color:red");
+      arr.push("color:black");
     }
-    arr.unshift(str.replace(/♥|♦/g, "%c$&%c"));
-    console.log.apply(null, arr);
+    console.log(str.replace(/♥|♦/g, "%c$&%c"), ...arr);
   }
 }
 
