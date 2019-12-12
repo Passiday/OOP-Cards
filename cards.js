@@ -99,14 +99,20 @@ class CardSet {
   }
 
   toString() {
-    let str = "";
-    for(let x = 0; x < this.cards.length; x++) {
-      if(x<this.cards.length-1)
-        str = str + this.cards[x].toString() + ", ";
+    return this.cards.join(", ");
+  }
+
+  log() {
+    const str = this.toString();
+    let arr = [];
+    for(let x = 0; x < (str.match(/♥|♦/g) || []).length*2; x++) {
+      if(x%2 == 0)
+        arr.push("color:red")
       else
-        str = str + this.cards[x].toString();
+        arr.push("color:black");
     }
-    return str;
+    arr.unshift(str.replace(/♥|♦/g, "%c$&%c"));
+    console.log.apply(null, arr);
   }
 }
 
