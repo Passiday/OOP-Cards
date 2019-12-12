@@ -153,4 +153,4 @@ CardSet.standardPack = (withJokers) => {
     cardSet.addCard(new Card(Card.TYPE_JOKER));  
   }
   return cardSet;
-};
+}
