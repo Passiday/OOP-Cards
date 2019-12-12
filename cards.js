@@ -79,7 +79,11 @@ Card.SUIT_DIAMONDS = 3;
 
 class CardSet {
   cards = [];
-
+  constructor(array){
+    if(array){
+      cards=[...array];
+    }
+  }
   addCard(card) {
     this.cards.push(card);
   }
