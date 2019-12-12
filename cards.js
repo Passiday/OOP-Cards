@@ -109,15 +109,15 @@ class CardSet {
     }
   }
 
-  takeTopCards(count) {
+  takeTop(count) {
     if (this.cards.length < count) throw new Error("Not enough cards in set");
-    return this.cards.splice(0, count);
+    return new CardSet(this.cards.splice(0, count));
   }
 
   fillUpTo(fromSet, count) {
     let toBeAdded = count - this.cards.length;
     if (toBeAdded <= 0) return;
-    this.cards = this.cards.concat(fromSet.takeTopCards(toBeAdded));
+    this.cards = this.cards.concat(fromSet.takeTop(toBeAdded));
   }
 
   toString() {
