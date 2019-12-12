@@ -83,6 +83,14 @@ class CardSet {
     return this.cards.length;
   }
 
+  asArray(){
+    let returnable=[];
+    this.cards.forEach(function(card){
+      returnable.push(Card.copy(card));
+    });
+    return returnable;
+  }
+
   getRandomSet(count) {
     // Makes a new CardSet object
     // Fills it with <count> random cards from the current set
