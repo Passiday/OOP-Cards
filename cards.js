@@ -117,29 +117,12 @@ class CardSet {
   }
 
   includes(card) {
-    let result = false;
-    this.cards.forEach(x => {
-      if(x.rank == card.rank && x.suit == card.suit){ //compare suit and rank, if equal, for all intents and purposes, they're the same card
-        result = true;
-      }
-    });
-    return result;
+    let result = this.cards.filter(x => {return (x.suit == card.suit && x.rank == card.rank)})[0] ? true : false; //filter out cards that match and select the 0th element, if it exists, result is true, if it doesn't, result is false
+    return result; //return whether the card is inside the CardSet
   }
 
   indexOf(card) {
-    let x = 0;
-    let result = false;
-    for(; x < this.cards.length; x++) {
-      if(this.cards[x].rank == card.rank && this.cards[x].suit == card.suit){ //compare suit and rank, if equal, for all intents and purposes, they're the same card
-        result = true;
-        break;
-      }
-    }
-    if(result) {
-      return x; //return the entry where the loop broke, since it is the index of the card requested
-    } else {
-      return -1; //return -1 if no results like the Array.indexOf() method
-    }
+    return this.cards.findIndex(x => {return (x.suit == card.suit && x.rank == card.rank)});
   }
 
   takeTop(count) {
