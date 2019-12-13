@@ -4,7 +4,7 @@ class CukasGame {
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
-    hands = [];
+    hands = []; //player hands
 
     gameState;
     activePlayerId;
@@ -75,7 +75,7 @@ class CukasGame {
             console.log("Player " + defencePlayerId + " picks up the cards.");
             console.log("Player " + defencePlayerId + " had this hand:");
             this.hands[defencePlayerId].log();
-            this.hands[defencePlayerId].cards.push(...attack);
+            this.hands[defencePlayerId].cards.push(...attack); //add attack cards to defenders deck
             if(this.hands[attackPlayerId].count - 6 < 0) {
                 this.hands[attackPlayerId].cards.push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].count - 6))); //make sure the attacker ends turn with 6 cards in hand
             }
@@ -122,7 +122,7 @@ class CukasGame {
         if(this.hands[defencePlayerId].length - 6 < 0) {
             this.hands[defencePlayerId].push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].length - 6))); //make sure defence has 6 cards
         }
-        this.activePlayerId = (this.activePlayerId + 1) % this.players.length;
+        this.activePlayerId = (this.activePlayerId + 1) % this.players.length; //increment active player id
         //console.log(this.players);
     }
 }

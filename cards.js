@@ -119,7 +119,7 @@ class CardSet {
   includes(card) {
     let result = false;
     this.cards.forEach(x => {
-      if(x.rank == card.rank && x.suit == card.suit){
+      if(x.rank == card.rank && x.suit == card.suit){ //compare suit and rank, if equal, for all intents and purposes, they're the same card
         result = true;
       }
     });
@@ -130,13 +130,15 @@ class CardSet {
     let x = 0;
     let result = false;
     for(; x < this.cards.length; x++) {
-      if(this.cards[x].rank == card.rank && this.cards[x].suit == card.suit){
+      if(this.cards[x].rank == card.rank && this.cards[x].suit == card.suit){ //compare suit and rank, if equal, for all intents and purposes, they're the same card
         result = true;
         break;
       }
     }
     if(result) {
-      return x;
+      return x; //return the entry where the loop broke, since it is the index of the card requested
+    } else {
+      return -1; //return -1 if no results like the Array.indexOf() method
     }
   }
 
