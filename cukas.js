@@ -4,11 +4,11 @@ class CukasGame {
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
-​
+
     gameState;
     activePlayerId;
     turnPhase;
-​
+
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     CukasGame(playerCount) {
         if(playerCount < 2) {
@@ -26,7 +26,7 @@ class CukasGame {
         this.deck.push(trump);
         this.gameState = STATE_GAME;
     }
-​
+
     //method that return a ready-to-send info about the situation about the game
     createPerspective(playerId) {
         var otherHands=[];//int[] contains number of cards for the next players in order
@@ -42,59 +42,66 @@ class CukasGame {
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
         return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
     }
-​
+
     turn() {
         const attackPlayerId = this.activePlayerId;
         const defencePlayerId = (this.activePlayerId + 1) % this.players.length;
         this.turnPhase = CukasGame.PHASE_ATTACK;
-        const attack = this.players[attackPlayerId].attack(this.getGameInfo());
-        let valid = true;
-        for(let x = 0; x < attack.length; x++) {
-            if(!this.players[attackPlayerId].hand.includes(attack[x])) { //make sure they actually have the cards
-                valid = false;
+        let attack;
+        let valid;
+        do{
+            valid = true;
+            attack = this.players[attackPlayerId].attack(this.getGameInfo());
+            for(let x = 0; x < attack.length; x++) {
+                if(!this.players[attackPlayerId].hand.includes(attack[x])) { //make sure they actually have the cards
+                    valid = false;
+                }
             }
-        }
-        if(!valid) {
-            throw "Invalid attack!"; //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
-        }
+            //if(!valid) {
+                //throw "Invalid attack!"; //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
+            //}
+        }while(!valid);
         for(let x = 0; x < attack.length; x++) {
             this.players[attackPlayerId].hand = this.players[attackPlayerId].hand.splice(this.players[attackPlayerId].hand.indexOf(attack[x]), 1); //take the cards out of the deck
         }
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
-        const defence = this.players[defencePlayerId].defend(this.getGameInfo());
-        if(defence == null) { //if null, just pick up the attack cards
-            this.players[defencePlayerId].deck.push(attack);
-            if(this.players[attackPlayerId].hand.length - 6 < 0) {
-                this.players[attackPlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure the attacker ends turn with 6 cards in hand
+        let defence;
+        do{
+            valid = true;
+            defence = this.players[defencePlayerId].defend(this.getGameInfo());
+            if(defence == null) { //if null, just pick up the attack cards
+                this.players[defencePlayerId].deck.push(attack);
+                if(this.players[attackPlayerId].hand.length - 6 < 0) {
+                    this.players[attackPlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure the attacker ends turn with 6 cards in hand
+                }
+                return;
             }
-            return;
-        }
-        valid = true;
-        for(let x = 0; x < attack.length; x++) {
-            if(!this.players[defencePlayerId].hand.includes(defence[x])) { //make sure defence has the cards
-                valid = false;
-            }
-            if(defence[x].suit != this.trump[0].suit) { //make sure the cards can beat the attack cards
-                if(attack[x].suit != defence[x].suit) {
+            for(let x = 0; x < attack.length; x++) {
+                if(!this.players[defencePlayerId].hand.includes(defence[x])) { //make sure defence has the cards
                     valid = false;
-                } else {
-                    if(attack[x].rank > defence[x].rank) {
-                        valid = false;
-                    }
                 }
-            } else {
-                if(attack[x].suit == this.trump.suit) { //likewise here
-                    if(attack[x].rank > defence[x].rank) {
+                if(defence[x].suit != this.trump[0].suit) { //make sure the cards can beat the attack cards
+                    if(attack[x].suit != defence[x].suit) {
                         valid = false;
+                    } else {
+                        if(attack[x].rank > defence[x].rank) {
+                            valid = false;
+                        }
+                    }
+                } else {
+                    if(attack[x].suit == this.trump.suit) { //likewise here
+                        if(attack[x].rank > defence[x].rank) {
+                            valid = false;
+                        }
                     }
                 }
             }
-        }
-        if(!valid) {
-            this.players[attackPlayerId].hand.push(attack); //put attack cards back in hand
-            throw "Invalid defence!"; //same as the invalid attack error
-        }
+            //if(!valid) {
+            //    this.players[attackPlayerId].hand.push(attack); //put attack cards back in hand
+            //    throw "Invalid defence!"; //same as the invalid attack error
+            //}
+        }while(!valid);
         for(let x = 0; x < attack.length; x++) {
             this.players[defencePlayerId].hand = this.players[defencePlayerId].hand.splice(this.players[defencePlayerId].hand.indexOf(defence[x]), 1); //remove played cards from hand
         }
@@ -108,29 +115,29 @@ class CukasGame {
         //console.log(this.players);
     }
 }
-​
+
 CukasGame.STATE_INIT = 1;
 CukasGame.STATE_GAME = 2;
 CukasGame.STATE_FINISHED = 3;
-​
+
 CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
-​
+
 class CukasPlayer {
     hand = null; // CardSet
-​
+
     //Constructor - initialises this class with a basic hand.
     CukasPlayer(initialHand) {
         this.hand = initialHand;
     }
-​
+
     attack(gameInfo) {
         // Returns array of attack cards
         if(hand.length > 0) {
             return hand[0];
         }
     }
-​
+
     defend(gameInfo) {
         // Returns array of defence cards or null, if the player picks up
         return null;
