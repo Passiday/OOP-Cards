@@ -7,7 +7,6 @@ class CukasGame {
 ​
     gameState;
     activePlayerId;
-    turn = 0;
     turnPhase;
 ​
     //Constructor 1 - creates a regular game object with 2 to 6 players.
@@ -28,22 +27,20 @@ class CukasGame {
         this.gameState = STATE_GAME;
     }
 ​
-    //Constructor 2 - used for creating snapshots of the game
-    CukasGame(parent, state) {
-        this.trump = parent.trump;
-        switch(state) {
-            case PHASE_ATTACK:
-                this.players = parent.player[parent.activePlayerId];
-                break;
-            case PHASE_DEFEND:
-                this.players = parent.player[(parent.activePlayerId + 1) % parent.players.length];
-                this.attack = parent.attack;
-                break;
+    //method that return a ready-to-send info about the situation about the game
+    createPerspective(playerId) {
+        var otherHands=[];//int[] contains number of cards for the next players in order
+        for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {//fills otherHands array
+          otherHands.push(this.players[i].count);
         }
-    }
-​
-    getGameInfo() {
-        return new CukasGame(this, this.turnPhase);
+        var playersState=0;
+        //CukasPlayerPerspective.STATE_WAITING;
+        if(playerId==this.activePlayerId) playersState = 1
+        //CukasPlayerPerspective.STATE_ATTACKING;
+        if(playerId==(this.activePlayerId+1)%this.players.length) playersState = 2;
+        //CukasPlayerPerspective.STATE_DEFENDING;
+        //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
+        return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
     }
 ​
     turn() {
@@ -66,8 +63,6 @@ class CukasGame {
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
         const defence = this.players[defencePlayerId].defend(this.getGameInfo());
-        //console.log(attack);
-        //console.log(defence);
         if(defence == null) { //if null, just pick up the attack cards
             this.players[defencePlayerId].deck.push(attack);
             if(this.players[attackPlayerId].hand.length - 6 < 0) {
@@ -141,8 +136,24 @@ class CukasPlayer {
         return null;
     }
 }
-Collapse
-
-
-
-
+/*
+class CukasPlayerPerspective {//container for info about specific users
+  hand;//current players hand (CardSet)
+  attack;//cards attacking
+  defence;//cards defending
+  otherHandCount;//amount of cards of other players
+  trump;//trump card
+  state;
+  constructor(iHand, iAttack, iDefence, iOtherHandCount, iTrump, iState){//i as in input NOT apple products
+    hand=iHand;
+    attack=iAttack;
+    defence=iDefence;
+    otherHandCount=iOtherHandCount;
+    trump=iTrump;
+    state=iState;
+  }
+}
+CukasPlayerPerspective.STATE_ATTACKING = 0;//various states
+CukasPlayerPerspective.STATE_DEFENDING = 1;
+CukasPlayerPerspective.STATE_WAITING = 2;
+*/

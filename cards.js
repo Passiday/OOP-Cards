@@ -3,7 +3,7 @@ class Card {
   type = Card.TYPE_NORMAL;
   style;
   back;
-  
+
   constructor(type, suit, rank) {
     this.type = type;
     if (type == Card.TYPE_NORMAL) {
@@ -25,19 +25,18 @@ class Card {
   }
   toString() {
     if(this.isNormal()) {
-      if(this.rank < 11 && this.rank > 1) {
-        return this.rank + this.getSuitSymbol();
-      } else {
-        switch(this.rank) {
-          case Card.RANK_JACK:
-            return "J" + this.getSuitSymbol();
-          case Card.RANK_QUEEN:
-            return "Q" + this.getSuitSymbol();
-          case Card.RANK_KING:
-            return "K" + this.getSuitSymbol();
-          case Card.RANK_ACE:
-            return "A" + this.getSuitSymbol();
-        }
+      let symbol=this.getSuitSymbol();
+      switch(this.rank) {
+        case Card.RANK_JACK:
+          return "J" + symbol;
+        case Card.RANK_QUEEN:
+          return "Q" + symbol;
+        case Card.RANK_KING:
+          return "K" + symbol;
+        case Card.RANK_ACE:
+          return "A" + symbol;
+        default:
+          return this.rank + symbol;
       }
     } else {
       return "★";
@@ -46,9 +45,9 @@ class Card {
 
   log() {
     const str = this.toString();
-    if(str.includes("♥") || str.includes("♦")) 
+    if(str.includes("♥") || str.includes("♦"))
       console.log(str.replace(/♥|♦/g, "%c$&"), "color: red")
-    else 
+    else
       console.log(str);
   }
 
@@ -58,6 +57,9 @@ class Card {
 
   isJoker() {
     return this.type == Card.TYPE_JOKER;
+  }
+  copy(){
+    return new Card(this.type, this.suit, this.rank);
   }
 }
 
@@ -75,13 +77,21 @@ Card.SUIT_DIAMONDS = 3;
 
 class CardSet {
   cards = [];
-
+  constructor(array){
+    if(array){
+      cards=[...array];
+    }
+  }
   addCard(card) {
     this.cards.push(card);
   }
 
   get count() {
     return this.cards.length;
+  }
+
+  asArray(){
+    return this.cards.map(x => x.copy());
   }
 
   getRandomSet(count) {
@@ -97,7 +107,9 @@ class CardSet {
     }
     return cardSet;
   }
-
+  copy(){
+    return new CardSet(this.cards);
+  }
   toString() {
     return this.cards.join(", ");
   }
@@ -128,7 +140,7 @@ CardSet.standardPack = (withJokers) => {
   });
   if (withJokers) {
     cardSet.addCard(new Card(Card.TYPE_JOKER));
-    cardSet.addCard(new Card(Card.TYPE_JOKER));  
+    cardSet.addCard(new Card(Card.TYPE_JOKER));
   }
   return cardSet;
 }
