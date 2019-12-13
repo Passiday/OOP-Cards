@@ -40,6 +40,7 @@ class CukasGame {
         if(playerId==(this.activePlayerId+1)%this.players.length) playersState = 2;
         //CukasPlayerPerspective.STATE_DEFENDING;
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
+        //{hand,attack,defence,otherHands,trumpis,state}
         return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
     }
 ​
@@ -47,7 +48,7 @@ class CukasGame {
         const attackPlayerId = this.activePlayerId;
         const defencePlayerId = (this.activePlayerId + 1) % this.players.length;
         this.turnPhase = CukasGame.PHASE_ATTACK;
-        const attack = this.players[attackPlayerId].attack(this.getGameInfo());
+        const attack = this.players[attackPlayerId].attack(this.createPerspective(attackPlayerId));
         let valid = true;
         for(let x = 0; x < attack.length; x++) {
             if(!this.players[attackPlayerId].hand.includes(attack[x])) { //make sure they actually have the cards
@@ -62,7 +63,7 @@ class CukasGame {
         }
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
-        const defence = this.players[defencePlayerId].defend(this.getGameInfo());
+        const defence = this.players[defencePlayerId].defend(this.createPerspective(defencePlayerId));
         if(defence == null) { //if null, just pick up the attack cards
             this.players[defencePlayerId].deck.push(attack);
             if(this.players[attackPlayerId].hand.length - 6 < 0) {
@@ -106,6 +107,7 @@ class CukasGame {
             this.players[defencePlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure defence has 6 cards
         }
         //console.log(this.players);
+
     }
 }
 ​
@@ -124,7 +126,7 @@ class CukasPlayer {
         this.hand = initialHand;
     }
 ​
-    attack(gameInfo) {
+    attack(perspective) {
         // Returns array of attack cards
         if(hand.length > 0) {
             return hand[0];
