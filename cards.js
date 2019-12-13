@@ -91,7 +91,7 @@ class CardSet {
   }
 
   asArray(){
-    return this.cards.map(x => new Card(x.type, x.suit, x.rank));
+    return this.cards.map(x => x.copy());
   }
 
   getRandomSet(count) {
