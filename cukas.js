@@ -1,22 +1,53 @@
+class CukasExceptions {
+    constructor(type ,message) {
+        this.type = type;
+        this.message = message;
+    }
+    toString() {
+        return `Kļūda: ${this.type}, ${this.message}`;
+    }
+}
+
 class CukasGame {
     players = []; // 2-6 players
     deck = null; // CardSet
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
-​
+
     gameState;
     activePlayerId;
     turnPhase;
-​
+
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     CukasGame(playerCount) {
-        if(playerCount < 2) {
-            throw "Can't make a game with 1 player";
+        function testFunction(playercount) {
+            let msg = "";
+            try {
+                if(playercount < 2) msg += "Spēlē nevar būt mazāk par 2 spēlētājiem :";
+                if(playercount > 6) msg += "Spēlē nevar būt vairāk par 6 spēlētājiem : ";
+                if(!isInteger(playercount)) msg += "Spēlētaju skaits ir vesels skaitlis : ";
+                if(isNaN(playercount)) msg += "Spēlētāju skaits ir skaitlis : ";
+            }
+            catch(error) {
+                throw new CukasExceptions("spēlētāju skaits", msg);
+            }
         }
-        if(playerCount > 6) {
-            throw "Can't make a game with more than 6 players";
+
+        function testCukasGame() {
+            try {
+                testFunction(playerCount);
+            }
+            catch(error) {
+                if(error.type = "spēlētāju skaits") {
+                    alert("spēlētaju skaits: " + error.message);
+                }
+                else {
+                    console.error(error + "");
+                }
+            }
         }
+        
         this.gameState = STATE_INIT;
         this.deck = CardSet.standardPack();
         for(let x = 0; x < playerCount; x++) {
@@ -26,7 +57,7 @@ class CukasGame {
         this.deck.push(trump);
         this.gameState = STATE_GAME;
     }
-​
+
     //method that return a ready-to-send info about the situation about the game
     createPerspective(playerId) {
         var otherHands=[];//int[] contains number of cards for the next players in order
@@ -42,7 +73,7 @@ class CukasGame {
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
         return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
     }
-​
+
     turn() {
         const attackPlayerId = this.activePlayerId;
         const defencePlayerId = (this.activePlayerId + 1) % this.players.length;
@@ -108,29 +139,29 @@ class CukasGame {
         //console.log(this.players);
     }
 }
-​
+
 CukasGame.STATE_INIT = 1;
 CukasGame.STATE_GAME = 2;
 CukasGame.STATE_FINISHED = 3;
-​
+
 CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
-​
+
 class CukasPlayer {
     hand = null; // CardSet
-​
+
     //Constructor - initialises this class with a basic hand.
     CukasPlayer(initialHand) {
         this.hand = initialHand;
     }
-​
+
     attack(gameInfo) {
         // Returns array of attack cards
         if(hand.length > 0) {
             return hand[0];
         }
     }
-​
+
     defend(gameInfo) {
         // Returns array of defence cards or null, if the player picks up
         return null;
