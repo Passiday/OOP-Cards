@@ -109,6 +109,21 @@ class CukasGame {
         //console.log(this.players);
 
     }
+    compareCards(A,B){//1 - a>b -1 - a<b 0 - a=b
+      if(A.type==Card.TYPE_JOKER)return 1;
+      if(B.type==Card.TYPE_JOKER)return -1;
+      let a_trump=A.suit==trump;
+      let b_trump=B.suit==trump;
+      if(A.suit==B.suit || a_trump || b_trump){
+        let pow=A.rank;
+        if(a_trump)pow+=20;
+        pow-=B.rank;
+        if(b_trump)pow-=20;
+        return Math.sign(pow);
+      }
+      console.warn("Warning: these are not comparable");
+      return false;
+    }
 }
 ​
 CukasGame.STATE_INIT = 1;
