@@ -26,19 +26,17 @@ class Card {
   toString() {
     if(this.isNormal()) {
       let symbol=this.getSuitSymbol();
-      if(this.rank < 11 && this.rank>1) {
-        return this.rank + symbol;
-      } else {
-        switch(this.rank) {
-          case Card.RANK_JACK:
-            return "J" + symbol;
-          case Card.RANK_QUEEN:
-            return "Q" + symbol;
-          case Card.RANK_KING:
-            return "K" + symbol;
-          case Card.RANK_ACE:
-            return "A" + symbol;
-        }
+      switch(this.rank) {
+        case Card.RANK_JACK:
+          return "J" + symbol;
+        case Card.RANK_QUEEN:
+          return "Q" + symbol;
+        case Card.RANK_KING:
+          return "K" + symbol;
+        case Card.RANK_ACE:
+          return "A" + symbol;
+        default:
+          return this.rank + symbol;
       }
     } else {
       return "★";
