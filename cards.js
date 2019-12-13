@@ -84,6 +84,10 @@ class CardSet {
     this.cards.push(card);
   }
 
+  addSet(cardSet) {
+    this.cards = this.cards.concat(cardSet.cards);
+  }
+
   get count() {
     return this.cards.length;
   }
@@ -117,7 +121,7 @@ class CardSet {
   fillUpTo(fromSet, count) {
     let toBeAdded = count - this.cards.length;
     if (toBeAdded <= 0) return;
-    this.cards = this.cards.concat(fromSet.takeTop(toBeAdded));
+    this.addSet(fromSet.takeTop(toBeAdded));
   }
 
   toString() {
