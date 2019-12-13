@@ -63,7 +63,7 @@ class CukasGame {
         }
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
-        const defence = this.players[defencePlayerId].defend(this.createPerspective(defencePlayerId));
+        const defence = this.players[defencePlayerId].defend(this.getGameInfo());
         if(defence == null) { //if null, just pick up the attack cards
             this.players[defencePlayerId].deck.push(attack);
             if(this.players[attackPlayerId].hand.length - 6 < 0) {
