@@ -61,9 +61,6 @@ class Card {
   copy(){
     return new Card(this.type, this.suit, this.rank);
   }
-  copy(){
-    return new Card(this.type, this.suit, this.rank);
-  }
 }
 
 Card.RANK_ACE = 1;
