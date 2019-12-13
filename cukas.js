@@ -53,10 +53,8 @@ class CukasGame {
         this.turnPhase = CukasGame.PHASE_ATTACK;
         const attack = this.players[attackPlayerId].attack(this.createPerspective(attackPlayerId));
         let valid = true;
-        for(let x = 0; x < attack.length; x++) {
-            if(!this.hands[attackPlayerId].includes(attack[x])) { //make sure they actually have the cards
-                valid = false;
-            }
+        if(!attack.every(x => {this.hands[attackPlayerId].includes(x)})) { //make sure they actually have the cards
+            valid = false;
         }
         if(!valid) {
             throw "Invalid attack!"; //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
@@ -83,10 +81,13 @@ class CukasGame {
             return;
         }
         valid = true;
+        if(!defence[x].every(x => {this.hands[defencePlayerId].includes(x)})) { //make sure defence has the cards
+            valid = false;
+        }
+        if(!valid) {
+            throw "Invalid defence!"; //same as the invalid attack error
+        }
         for(let x = 0; x < attack.length; x++) {
-            if(!this.hands[defencePlayerId].includes(defence[x])) { //make sure defence has the cards
-                valid = false;
-            }
             //TODO: Make a card comparison function in Card class
             if(defence[x].suit != this.trump[0].suit) { //make sure the cards can beat the attack cards
                 if(attack[x].suit != defence[x].suit) {
@@ -105,7 +106,6 @@ class CukasGame {
             }
         }
         if(!valid) {
-            this.hands[attackPlayerId].push(attack); //put attack cards back in hand
             throw "Invalid defence!"; //same as the invalid attack error
         }
 
@@ -136,7 +136,9 @@ CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
 
 class CukasPlayer {
+    constructor () {
 
+    }
 
     attack(gameInfo) {
         // Returns array of attack cards
