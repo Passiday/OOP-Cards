@@ -79,6 +79,7 @@ class CukasGame {
             if(this.hands[attackPlayerId].count - 6 < 0) {
                 this.hands[attackPlayerId].cards.push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].count - 6))); //make sure the attacker ends turn with 6 cards in hand
             }
+            this.activePlayerId = (this.activePlayerId + 2) % this.players.length; //increment player id by 2 since if you pick up cards, you sit out a turn
             return;
         }
         valid = true;
