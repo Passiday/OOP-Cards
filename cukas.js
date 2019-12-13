@@ -57,8 +57,12 @@ class CukasGame {
         if(!valid) {
             throw "Invalid attack!"; //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
         }
+        console.log("Player" + attackPlayerId + " had this hand:");
+        this.players[attackPlayerId].hand.log();
+        console.log("Player " + attackPlayerId + "attacks with:");
         for(let x = 0; x < attack.length; x++) {
-            this.players[attackPlayerId].hand = this.players[attackPlayerId].hand.splice(this.players[attackPlayerId].hand.indexOf(attack[x]), 1); //take the cards out of the deck
+            this.players[attackPlayerId].hand = this.players[attackPlayerId].hand.splice(this.players[attackPlayerId].hand.indexOf(this.attack[x]), 1); //take the cards out of the deck
+            this.attack[x].log();
         }
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
@@ -95,8 +99,13 @@ class CukasGame {
             this.players[attackPlayerId].hand.push(attack); //put attack cards back in hand
             throw "Invalid defence!"; //same as the invalid attack error
         }
+
+        console.log("Player" + defencePlayerId + " had this hand:");
+        this.players[defencePlayerId].hand.log();
+        console.log("Player " + defencePlayerId + " defends with:")
         for(let x = 0; x < attack.length; x++) {
-            this.players[defencePlayerId].hand = this.players[defencePlayerId].hand.splice(this.players[defencePlayerId].hand.indexOf(defence[x]), 1); //remove played cards from hand
+            this.players[defencePlayerId].hand = this.players[defencePlayerId].hand.splice(this.players[defencePlayerId].hand.indexOf(this.defence[x]), 1); //remove played cards from hand
+            this.defence[x].log();
         }
         this.defence = defence;
         if(this.players[attackPlayerId].hand.length - 6 < 0) {
