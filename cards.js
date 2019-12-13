@@ -116,6 +116,30 @@ class CardSet {
     }
   }
 
+  includes(card) {
+    let result = false;
+    this.cards.forEach(x => {
+      if(x.rank == card.rank && x.suit == card.suit){
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  indexOf(card) {
+    let x = 0;
+    let result = false;
+    for(; x < this.cards.length; x++) {
+      if(this.cards[x].rank == card.rank && this.cards[x].suit == card.suit){
+        result = true;
+        break;
+      }
+    }
+    if(result) {
+      return x;
+    }
+  }
+
   takeTop(count) {
     if (this.cards.length < count) throw new Error("Not enough cards in set");
     return new CardSet(this.cards.splice(0, count));

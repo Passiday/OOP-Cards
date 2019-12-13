@@ -4,6 +4,7 @@ class CukasGame {
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
+    hands = [];
 
     gameState;
     activePlayerId;
@@ -21,7 +22,8 @@ class CukasGame {
         this.gameState = CukasGame.STATE_INIT;
         this.deck = CardSet.standardPack();
         for(let x = 0; x < playerCount; x++) {
-            this.players[x] = new CukasPlayer(this.deck.getRandomSet(6));
+            this.players[x] = new CukasPlayer();
+            this.hands[x] = this.deck.getRandomSet(6);
         }
         this.trump = this.deck.getRandomSet(1);
         this.deck.addCard(this.trump);
@@ -42,7 +44,7 @@ class CukasGame {
         if(playerId==(this.activePlayerId+1)%this.players.length) playersState = 2;
         //CukasPlayerPerspective.STATE_DEFENDING;
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
-        return {hand:this.players[playerId].hand.copy(), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:this.trump.copy(), state:playersState};
+        return {hand:this.hands[playerId].copy(), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:this.trump.copy(), state:playersState};
     }
 
     turn() {
@@ -52,7 +54,7 @@ class CukasGame {
         const attack = this.players[attackPlayerId].attack(this.createPerspective(attackPlayerId));
         let valid = true;
         for(let x = 0; x < attack.length; x++) {
-            if(!this.players[attackPlayerId].hand.cards.includes(attack[x])) { //make sure they actually have the cards
+            if(!this.hands[attackPlayerId].includes(attack[x])) { //make sure they actually have the cards
                 valid = false;
             }
         }
@@ -62,9 +64,9 @@ class CukasGame {
         console.log("Player " + attackPlayerId + " attacks with:");
         new CardSet(attack).log();
         console.log("Player " + attackPlayerId + " had this hand:");
-        this.players[attackPlayerId].hand.log();
+        this.hands[attackPlayerId].log();
         for(let x = 0; x < attack.length; x++) {
-            this.players[attackPlayerId].hand.cards.splice(this.players[attackPlayerId].hand.cards.indexOf(attack[x]), 1); //take the cards out of the deck
+            this.hands[attackPlayerId].cards.splice(this.hands[attackPlayerId].indexOf(attack[x]), 1); //take the cards out of the deck
         }
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
@@ -72,18 +74,19 @@ class CukasGame {
         if(defence == null) { //if null, just pick up the attack cards
             console.log("Player " + defencePlayerId + " picks up the cards.");
             console.log("Player " + defencePlayerId + " had this hand:");
-            this.players[defencePlayerId].hand.log();
-            this.players[defencePlayerId].hand.cards.push(...attack);
-            if(this.players[attackPlayerId].hand.count - 6 < 0) {
-                this.players[attackPlayerId].hand.cards.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.count - 6))); //make sure the attacker ends turn with 6 cards in hand
+            this.hands[defencePlayerId].log();
+            this.hands[defencePlayerId].cards.push(...attack);
+            if(this.hands[attackPlayerId].count - 6 < 0) {
+                this.hands[attackPlayerId].cards.push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].count - 6))); //make sure the attacker ends turn with 6 cards in hand
             }
             return;
         }
         valid = true;
         for(let x = 0; x < attack.length; x++) {
-            if(!this.players[defencePlayerId].hand.includes(defence[x])) { //make sure defence has the cards
+            if(!this.hands[defencePlayerId].includes(defence[x])) { //make sure defence has the cards
                 valid = false;
             }
+            //TODO: Make a card comparison function in Card class
             if(defence[x].suit != this.trump[0].suit) { //make sure the cards can beat the attack cards
                 if(attack[x].suit != defence[x].suit) {
                     valid = false;
@@ -101,23 +104,23 @@ class CukasGame {
             }
         }
         if(!valid) {
-            this.players[attackPlayerId].hand.push(attack); //put attack cards back in hand
+            this.hands[attackPlayerId].push(attack); //put attack cards back in hand
             throw "Invalid defence!"; //same as the invalid attack error
         }
 
         console.log("Player " + defencePlayerId + " defends with:")
         new CardSet(defence).log();
         console.log("Player " + defencePlayerId + " had this hand:");
-        this.players[defencePlayerId].hand.log();
+        this.hands[defencePlayerId].log();
         for(let x = 0; x < attack.length; x++) {
-           this.players[defencePlayerId].hand.splice(this.players[defencePlayerId].hand.indexOf(defence[x]), 1); //remove played cards from hand
+           this.hands[defencePlayerId].splice(this.hands[defencePlayerId].indexOf(defence[x]), 1); //remove played cards from hand
         }
         this.defence = defence;
-        if(this.players[attackPlayerId].hand.length - 6 < 0) {
-            this.players[attackPlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure attack has 6 cards
+        if(this.hands[attackPlayerId].length - 6 < 0) {
+            this.hands[attackPlayerId].push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].length - 6))); //make sure attack has 6 cards
         }
-        if(this.players[defencePlayerId].hand.length - 6 < 0) {
-            this.players[defencePlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure defence has 6 cards
+        if(this.hands[defencePlayerId].length - 6 < 0) {
+            this.hands[defencePlayerId].push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].length - 6))); //make sure defence has 6 cards
         }
         this.activePlayerId = (this.activePlayerId + 1) % this.players.length;
         //console.log(this.players);
@@ -132,18 +135,13 @@ CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
 
 class CukasPlayer {
-    hand = null; // CardSet
 
-    //Constructor - initialises this class with a basic hand.
-    constructor(initialHand) {
-        this.hand = initialHand;
-    }
 
     attack(gameInfo) {
         // Returns array of attack cards
         let arr = [];
-        if(this.hand.count > 0) {
-            arr.push(this.hand.cards[0]);
+        if(gameInfo.hand.count > 0) {
+            arr.push(gameInfo.hand.cards[0]);
             return arr;
         }
     }
