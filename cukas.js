@@ -53,7 +53,7 @@ class CukasGame {
         this.turnPhase = CukasGame.PHASE_ATTACK;
         const attack = this.players[attackPlayerId].attack(this.createPerspective(attackPlayerId));
         let valid = true;
-        if(!attack.every(x => {this.hands[attackPlayerId].includes(x)})) { //make sure they actually have the cards
+        if(!attack.every(x => this.hands[attackPlayerId].includes(x))) { //make sure they actually have the cards
             valid = false;
         }
         if(!valid) {
@@ -81,7 +81,7 @@ class CukasGame {
             return;
         }
         valid = true;
-        if(!defence[x].every(x => {this.hands[defencePlayerId].includes(x)})) { //make sure defence has the cards
+        if(!defence[x].every(x => this.hands[defencePlayerId].includes(x))) { //make sure defence has the cards
             valid = false;
         }
         if(!valid) {
