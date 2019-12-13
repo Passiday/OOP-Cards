@@ -6,7 +6,7 @@ class Card {
 
   constructor(type, suit, rank) {
     this.type = type;
-    if (type == Card.TYPE_NORMAL) {
+    if (type === Card.TYPE_NORMAL) {
       this.suit = suit;
       this.rank = rank;
     }
@@ -52,11 +52,11 @@ class Card {
   }
 
   isNormal() {
-    return this.type == Card.TYPE_NORMAL;
+    return this.type === Card.TYPE_NORMAL;
   }
 
   isJoker() {
-    return this.type == Card.TYPE_JOKER;
+    return this.type === Card.TYPE_JOKER;
   }
   copy(){
     return new Card(this.type, this.suit, this.rank);
@@ -77,13 +77,15 @@ Card.SUIT_DIAMONDS = 3;
 
 class CardSet {
   cards = [];
-  constructor(array){
-    if(array){
-      cards=[...array];
-    }
+  constructor(cards) {
+    this.cards = cards || [];
   }
   addCard(card) {
     this.cards.push(card);
+  }
+
+  addSet(cardSet) {
+    this.cards = this.cards.concat(cardSet.cards);
   }
 
   get count() {
@@ -106,6 +108,23 @@ class CardSet {
       this.cards.splice(val, 1);
     }
     return cardSet;
+  }
+  shuffle() {
+    for (let i = this.cards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
+    }
+  }
+
+  takeTop(count) {
+    if (this.cards.length < count) throw new Error("Not enough cards in set");
+    return new CardSet(this.cards.splice(0, count));
+  }
+
+  fillUpTo(fromSet, count) {
+    let toBeAdded = count - this.cards.length;
+    if (toBeAdded <= 0) return;
+    this.addSet(fromSet.takeTop(toBeAdded));
   }
   copy(){
     return new CardSet(this.cards);
