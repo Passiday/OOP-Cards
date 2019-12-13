@@ -108,7 +108,7 @@ class CardSet {
     return cardSet;
   }
   copy(){
-    return new CardSet(this.cards);
+    return new CardSet(this.asArray());
   }
   toString() {
     return this.cards.join(", ");
