@@ -1,21 +1,27 @@
+class CukasGameException{
+    constructor(type,message){
+        this.type = type;
+        this.message = message;
+    }
+    toString(){
+        return `Type: ${this.type}, message: ${this.message}`;
+    }
+}
 class CukasGame {
     players = []; // 2-6 players
     deck = null; // CardSet
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
-​
+
     gameState;
     activePlayerId;
     turnPhase;
-​
+
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     CukasGame(playerCount) {
-        if(playerCount < 2) {
-            throw "Can't make a game with 1 player";
-        }
-        if(playerCount > 6) {
-            throw "Can't make a game with more than 6 players";
+        if(playerCount < 2 || playerCount > 6 || isNaN(playerCount)) {
+            throw new CukasGameException("player count",`Can't make a game with ${playerCount} players`);
         }
         this.gameState = STATE_INIT;
         this.deck = CardSet.standardPack();
@@ -26,7 +32,7 @@ class CukasGame {
         this.deck.push(trump);
         this.gameState = STATE_GAME;
     }
-​
+
     //method that return a ready-to-send info about the situation about the game
     createPerspective(playerId) {
         var otherHands=[];//int[] contains number of cards for the next players in order
@@ -42,7 +48,7 @@ class CukasGame {
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
         return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
     }
-​
+
     turn() {
         const attackPlayerId = this.activePlayerId;
         const defencePlayerId = (this.activePlayerId + 1) % this.players.length;
@@ -55,7 +61,7 @@ class CukasGame {
             }
         }
         if(!valid) {
-            throw "Invalid attack!"; //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
+            throw new CukasGameException("invalid move","Invalid attack"); //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
         }
         for(let x = 0; x < attack.length; x++) {
             this.players[attackPlayerId].hand = this.players[attackPlayerId].hand.splice(this.players[attackPlayerId].hand.indexOf(attack[x]), 1); //take the cards out of the deck
@@ -93,7 +99,7 @@ class CukasGame {
         }
         if(!valid) {
             this.players[attackPlayerId].hand.push(attack); //put attack cards back in hand
-            throw "Invalid defence!"; //same as the invalid attack error
+            throw new CukasGameException("invalid move","Invalid defence")
         }
         for(let x = 0; x < attack.length; x++) {
             this.players[defencePlayerId].hand = this.players[defencePlayerId].hand.splice(this.players[defencePlayerId].hand.indexOf(defence[x]), 1); //remove played cards from hand
@@ -108,29 +114,29 @@ class CukasGame {
         //console.log(this.players);
     }
 }
-​
+
 CukasGame.STATE_INIT = 1;
 CukasGame.STATE_GAME = 2;
 CukasGame.STATE_FINISHED = 3;
-​
+
 CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
-​
+
 class CukasPlayer {
     hand = null; // CardSet
-​
+
     //Constructor - initialises this class with a basic hand.
     CukasPlayer(initialHand) {
         this.hand = initialHand;
     }
-​
+
     attack(gameInfo) {
         // Returns array of attack cards
         if(hand.length > 0) {
             return hand[0];
         }
     }
-​
+
     defend(gameInfo) {
         // Returns array of defence cards or null, if the player picks up
         return null;
