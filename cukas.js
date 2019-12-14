@@ -20,7 +20,7 @@ class CukasGame {
 
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     CukasGame(playerCount) {
-        if(playerCount < 2 || playerCount > 6 || isNaN(playerCount)) {
+        if(isNaN(playerCount) || playerCount < 2 || playerCount > 6) {
             throw new CukasGameException("player count",`Can't make a game with ${playerCount} players`);
         }
         this.gameState = STATE_INIT;
