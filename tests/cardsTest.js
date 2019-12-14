@@ -1,5 +1,6 @@
 import { Selector } from 'testcafe';
-fixture `Getting Started`
+import { ClientFunction } from 'testcafe';
+fixture `Cards Testd`
     .page `../index.html`;
 //https://devexpress.github.io/testcafe/documentation/test-api/obtaining-data-from-the-client/
 //Use this to write tests testing js functions.
