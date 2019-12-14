@@ -7,6 +7,6 @@ node_js:
     - node
 install:
     - npm install testcafe
-    - npm install testcafe-browser-provider-nightmare --save-dev
+    - npm install testcafe-browser-provider-nightmare
 script:
-    - xvfb-run testcafe nightmare tests/
+    - testcafe nightmare tests/
