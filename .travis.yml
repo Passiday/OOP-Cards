@@ -1,14 +1,10 @@
-sudo: false
+os: linux
 dist: xenial
 services:
     xvfb
-addons:
-    apt:
-        sources:
-            google-chrome
-        packages:
-            google-chrome-stable
 language: node_js
+node_js:
+    - node
 install:
     - npm install testcafe
     - npm install testcafe-browser-provider-nightmare --save-dev
