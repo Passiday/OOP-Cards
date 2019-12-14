@@ -1,0 +1,16 @@
+sudo: false
+dist: xenial
+services:
+    xvfb
+addons:
+    apt:
+        sources:
+            google-chrome
+        packages:
+            google-chrome-stable
+language: node_js
+install:
+    - npm install testcafe
+    - npm install testcafe-browser-provider-nightmare --save-dev
+script:
+    - testcafe nightmare cardsTest.js
