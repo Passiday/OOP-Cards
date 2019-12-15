@@ -20,7 +20,7 @@ const indexTest = ClientFunction(() => {
 });
 test('CardSet.indexOf(card) test', async t => {
     const result = await indexTest();
-    await t.expect(result).eql(32, "indexOf returned an incorrect result!");
+    await t.expect(result).eql(31, "indexOf returned an incorrect result!");
 });
 const countTest = ClientFunction(() => {
     const cardSet = CardSet.standardPack();
@@ -50,7 +50,7 @@ test('CardSet.takeTop(n) test', async t => {
 const copyTest = ClientFunction(() => {
     const cardSet = CardSet.standardPack();
     const copySet = cardSet.takeTop(1).cards[0];
-    return cardSet.card.every((x, n) => x.rank == copySet.cards[n].rank && x.suit == copySet.cards[n].suit);
+    return cardSet.cards.every((x, n) => x.rank == copySet.cards[n].rank && x.suit == copySet.cards[n].suit);
 });
 test('CardSet.copy() test', async t => {
     const result = await copyTest();
@@ -62,7 +62,7 @@ const stringTest = ClientFunction(() => {
 });
 test('CardSet.copy() test', async t => {
     const result = await stringTest();
-    await t.expect(result).eq("2♥, 3♥, 4♥, 5♥, 6♥, 7♥, 8♥, 9♥, 10♥, J♥, Q♥, K♥, A♠, 2♠, 3♠, 4♠, 5♠, 6♠, 7♠, 8♠, 9♠, 10♠, J♠, Q♠, K♠, A♣, 2♣, 3♣, 4♣, 5♣, 6♣, 7♣, 8♣, 9♣, 10♣, J♣, Q♣, K♣, A♦, 2♦, 3♦, 4♦, 5♦, 6♦, 7♦, 8♦, 9♦, 10♦, J♦, Q♦, K♦", "toString returned an incorrect result!");
+    await t.expect(result).eql("A♥, 2♥, 3♥, 4♥, 5♥, 6♥, 7♥, 8♥, 9♥, 10♥, J♥, Q♥, K♥, A♠, 2♠, 3♠, 4♠, 5♠, 6♠, 7♠, 8♠, 9♠, 10♠, J♠, Q♠, K♠, A♣, 2♣, 3♣, 4♣, 5♣, 6♣, 7♣, 8♣, 9♣, 10♣, J♣, Q♣, K♣, A♦, 2♦, 3♦, 4♦, 5♦, 6♦, 7♦, 8♦, 9♦, 10♦, J♦, Q♦, K♦", "toString returned an incorrect result!");
 });
 const cardSymbolTest = ClientFunction(() => {
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
