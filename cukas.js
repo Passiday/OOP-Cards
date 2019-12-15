@@ -1,3 +1,12 @@
+class CukasGameException{
+    constructor(type,message){
+        this.type = type;
+        this.message = message;
+    }
+    toString(){
+        return `Type: ${this.type}, message: ${this.message}`;
+    }
+}
 class CukasGame {
     players = []; // 2-6 players
     deck = null; // CardSet
@@ -13,11 +22,8 @@ class CukasGame {
 
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     constructor(playerCount) {
-        if(playerCount < 2) {
-            throw "Can't make a game with 1 player";
-        }
-        if(playerCount > 6) {
-            throw "Can't make a game with more than 6 players";
+        if(isNaN(playerCount) || playerCount < 2 || playerCount > 6) {
+            throw new CukasGameException("player count",`Can't make a game with ${playerCount} players`);
         }
         this.gameState = CukasGame.STATE_INIT;
         this.deck = CardSet.standardPack();
@@ -57,7 +63,7 @@ class CukasGame {
             valid = false;
         }
         if(!valid) {
-            throw "Invalid attack!"; //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
+            throw new CukasGameException("invalid move","Invalid attack"); //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
         }
         console.log("Player " + attackPlayerId + " attacks with:");
         new CardSet(attack).log();
@@ -106,7 +112,7 @@ class CukasGame {
             }
         }
         if(!valid) {
-            throw "Invalid defence!"; //same as the invalid attack error
+            throw new CukasGameException("invalid move","Invalid defence")
         }
 
         console.log("Player " + defencePlayerId + " defends with:")
@@ -137,7 +143,7 @@ CukasGame.PHASE_DEFEND = 2;
 
 class CukasPlayer {
     constructor () {
-
+        
     }
 
     attack(gameInfo) {
