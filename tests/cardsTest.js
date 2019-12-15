@@ -49,7 +49,7 @@ test('CardSet.takeTop(n) test', async t => {
 });
 const copyTest = ClientFunction(() => {
     const cardSet = CardSet.standardPack();
-    const copySet = cardSet.takeTop(1).cards[0];
+    const copySet = cardSet.copy();
     return cardSet.cards.every((x, n) => x.rank == copySet.cards[n].rank && x.suit == copySet.cards[n].suit);
 });
 test('CardSet.copy() test', async t => {
