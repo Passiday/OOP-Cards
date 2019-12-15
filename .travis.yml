@@ -7,6 +7,5 @@ node_js:
     - node
 install:
     - npm install testcafe
-    - npm install testcafe-browser-provider-nightmare
 script:
-    - testcafe nightmare tests/
+    - testcafe chrome:headless tests/
