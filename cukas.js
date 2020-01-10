@@ -19,18 +19,35 @@ class CukasGame {
     turnPhase;
 
     //Constructor 1 - creates a regular game object with 2 to 6 players.
-    CukasGame(playerCount) {
+    constructor(playerCount) {
+        this.controller = null;
         if(isNaN(playerCount) || playerCount < 2 || playerCount > 6) {
             throw new CukasGameException("player count",`Can't make a game with ${playerCount} players`);
         }
-        this.gameState = STATE_INIT;
+        this.playerCount = playerCount;
+        this.gameState = CukasGame.STATE_UNINITIALIZED
+    }
+
+    init() {
+        this.gameState = CukasGame.STATE_INIT;
         this.deck = CardSet.standardPack();
-        for(let x = 0; x < playerCount; x++) {
-            players[x] = new CukasPlayer(this.deck.getRandomSet(6));
+        // TODO: shuffle the deck and then just give the players top 6 cards. Also, just pick the trump card from the top.
+        for(let x = 0; x < this.playerCount; x++) {
+            const playerHand = this.deck.getRandomSet(6);
+            this.players[x] = new CukasPlayer(playerHand);
+            this.event("hand", {playerId:x, cards:playerHand});
         }
         this.trump = this.deck.getRandomSet(1);
-        this.deck.push(trump);
-        this.gameState = STATE_GAME;
+        this.deck.addCard(this.trump); // TODO: Must add at the end
+
+        this.gameState = CukasGame.STATE_GAME;
+
+        this.event("supply", {cards:this.deck, trump:this.trump});
+    }
+
+    event(eventType, eventInfo) {
+        if (!this.controller) return;
+        this.controller.update(eventType, eventInfo);
     }
 
     //method that return a ready-to-send info about the situation about the game
@@ -115,6 +132,7 @@ class CukasGame {
     }
 }
 
+CukasGame.STATE_UNINITIALIZED = 0;
 CukasGame.STATE_INIT = 1;
 CukasGame.STATE_GAME = 2;
 CukasGame.STATE_FINISHED = 3;
