@@ -1,31 +1,72 @@
+:root {
+  --primary-color-lightest: #f8f6ff;
+  --primary-color-lighter: #e7e5fd;
+  --primary-color: #d2cef9;
+  --primary-color-darker: #bab4f0;
+  --primary-color-darkest: #ada6f0; }
+
 * {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', Helvetica; }
 
 body {
   margin: 0;
   width: 100vw;
-  height: 100vh; }
+  height: 100vh;
+  padding: 10px; }
 
 #container {
   margin: 0;
   width: 100%;
   height: 100%;
+  font-size: 16px;
   display: grid;
   grid-template-areas: "main-title main-title main-title" "main-area main-area main-area" "trump-area hands hands";
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto 2fr 1fr; }
+  grid-template-rows: auto 2fr 1fr;
+  justify-items: center;
+  align-items: center; }
+  #container > * {
+    height: 100%;
+    width: 100%; }
   #container #main-title {
     grid-area: main-title;
+    justify-self: left;
     margin: 0; }
   #container .trump-area {
     grid-area: trump-area; }
   #container .main-area {
     grid-area: main-area;
+    height: 95%;
+    width: 95%;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: 50px 50px; }
-    #container .main-area .slot h2 {
-      font-size: 10px; }
+    grid-template-rows: 1fr 1fr;
+    justify-content: center;
+    align-content: center;
+    grid-gap: 20px; }
+    #container .main-area .slot {
+      height: 100%;
+      width: 100%;
+      background: var(--primary-color);
+      border: solid var(--primary-color-darker) 2px;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      justify-items: center;
+      align-items: center; }
+      #container .main-area .slot h2 {
+        font-size: 0.7em;
+        letter-spacing: 1px;
+        text-transform: lowercase;
+        font-variant: small-caps; }
+      #container .main-area .slot > div {
+        height: 100%;
+        width: 100%;
+        background: var(--primary-color-lighter);
+        display: grid;
+        justify-content: center;
+        align-content: center; }
   #container .hands {
     grid-area: hands;
     display: grid;
