@@ -22,19 +22,15 @@ body {
   height: 100%;
   font-size: 16px;
   display: grid;
-  grid-template-areas: "main-title main-title main-title" "main-area main-area main-area" "trump-area hands hands";
+  grid-template-areas: "main-area main-area main-area" "trump-area hands hands";
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto 2fr 1fr;
+  grid-template-rows: 2fr 1fr;
   grid-gap: 10px;
   justify-items: center;
   align-items: center; }
   #container > * {
     height: 100%;
     width: 100%; }
-  #container #main-title {
-    grid-area: main-title;
-    justify-self: left;
-    margin: 0; }
   #container .trump-area {
     grid-area: trump-area;
     background: var(--primary-color-lighter);
