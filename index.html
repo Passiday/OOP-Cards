@@ -12,18 +12,18 @@
       let cukasController;
 
       function init() {
-      const cukasGame = new CukasGame(4); // Model
-      const cukasContainer = document.getElementById("container"); // View
-      cukasController = new CukasController(cukasGame, cukasContainer); // Controller
-      cukasGame.init();
+          const cukasGame = new CukasGame(4); // Model
+          const cukasContainer = document.getElementById("container"); // View
+          cukasController = new CukasController(cukasGame, cukasContainer); // Controller
+          cukasGame.init();
       }
 
       window.addEventListener("load", init);
 
       /*
-      const g = new CukasGame(3); // 3 players
-      g.turn(); // Active player attacks
-      g.turn(); // Next player defends
+       const g = new CukasGame(3); // 3 players
+       g.turn(); // Active player attacks
+       g.turn(); // Next player defends
       */
 
     </script>
