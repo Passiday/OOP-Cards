@@ -1,0 +1,34 @@
+* {
+  box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh; }
+
+#container {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-areas: "main-title main-title main-title" "main-area main-area main-area" "trump-area hands hands";
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 2fr 1fr; }
+  #container #main-title {
+    grid-area: main-title;
+    margin: 0; }
+  #container .trump-area {
+    grid-area: trump-area; }
+  #container .main-area {
+    grid-area: main-area;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 50px 50px; }
+    #container .main-area .slot h2 {
+      font-size: 10px; }
+  #container .hands {
+    grid-area: hands;
+    display: grid;
+    grid-auto-flow: column; }
+
+/*# sourceMappingURL=style.css.map */
