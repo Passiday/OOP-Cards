@@ -71,5 +71,24 @@ body {
     grid-area: hands;
     display: grid;
     grid-auto-flow: column; }
+    #container .hands .hand {
+      background: var(--primary-color);
+      border-right: solid var(--primary-color-darker) 2px;
+      border-top: solid var(--primary-color-darker) 2px;
+      border-bottom: solid var(--primary-color-darker) 2px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      justify-items: center;
+      align-items: center; }
+      #container .hands .hand:nth-child(1) {
+        border-left: solid var(--primary-color-darker) 2px; }
+      #container .hands .hand h2 {
+        margin: 0;
+        font-size: 1.2em; }
+      #container .hands .hand > div {
+        background: var(--primary-color-lighter);
+        padding: 5px;
+        height: 100%;
+        width: 100%; }
 
 /*# sourceMappingURL=style.css.map */
