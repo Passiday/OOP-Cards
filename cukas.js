@@ -41,7 +41,12 @@ class CukasGame {
         //CukasPlayerPerspective.STATE_DEFENDING;
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
         //{hand,attack,defence,otherHands,trumpis,state}
-        return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
+        return {hand: CardSet.copy(this.players[playerId].hand), 
+            attack: [...this.attack], 
+            defence: [...this.defence], 
+            others: otherHands, 
+            trump: Card.copy(this.trump), 
+            state: playersState};
     }
 ​
     turn() {
@@ -109,17 +114,21 @@ class CukasGame {
         //console.log(this.players);
 
     }
-    compareCards(A,B){//1 - a>b -1 - a<b 0 - a=b
-      if(A.type==Card.TYPE_JOKER)return 1;
-      if(B.type==Card.TYPE_JOKER)return -1;
-      let a_trump=A.suit==trump;
-      let b_trump=B.suit==trump;
-      if(A.suit==B.suit || a_trump || b_trump){
-        let pow=A.rank;
+    compareCards(a,b){//1 - a>b -1 - a<b 0 - a=b
+      if(a.type==Card.TYPE_JOKER && b.type!=Card.TYPE_JOKER)return 1;
+      if(a.type==Card.TYPE_JOKER && b.type==Card.TYPE_JOKER)return 0;
+      if(b.type==Card.TYPE_JOKER)return -1;
+      const a_trump=a.suit==trump;
+      const b_trump=b.suit==trump;
+      if(a.suit==b.suit){
+        let pow=a.rank;
         if(a_trump)pow+=20;
-        pow-=B.rank;
+        pow-=b.rank;
         if(b_trump)pow-=20;
         return Math.sign(pow);
+      } else if(a_trump || b_trump) {
+          if(a_trump)return 1;
+          if(b_trump)return -1;
       }
       console.warn("Warning: these are not comparable");
       return false;
