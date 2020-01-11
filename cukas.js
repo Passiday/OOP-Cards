@@ -121,11 +121,7 @@ class CukasGame {
       const a_trump=a.suit==trump;
       const b_trump=b.suit==trump;
       if(a.suit==b.suit){
-        let pow=a.rank;
-        if(a_trump)pow+=20;
-        pow-=b.rank;
-        if(b_trump)pow-=20;
-        return Math.sign(pow);
+        return Math.sign(a.rank-b.rank);
       } else if(a_trump || b_trump) {
           if(a_trump)return 1;
           if(b_trump)return -1;
