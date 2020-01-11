@@ -1,76 +1,111 @@
 <html>
-<head>
-<meta charset="utf-8"/>
-<script src="cards.js"></script>
-<script src="cukas.js"></script>
-<script src="cukasController.js"></script>
-<script>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="cards.js"></script>
+    <script src="cukas.js"></script>
+    <script src="cukasController.js"></script>
+    <script>
 
-//let deck = CardSet.standardPack();
+      //let deck = CardSet.standardPack();
 
-let cukasController;
+      let cukasController;
 
-function init() {
-  const cukasGame = new CukasGame(4); // Model
-  const cukasContainer = document.getElementById("container"); // View
-  cukasController = new CukasController(cukasGame, cukasContainer); // Controller
-  cukasGame.init();
-}
+      function init() {
+          const cukasGame = new CukasGame(4); // Model
+          const cukasContainer = document.getElementById("container"); // View
+          cukasController = new CukasController(cukasGame, cukasContainer); // Controller
+          cukasGame.init();
+      }
 
-window.addEventListener("load", init);
+      window.addEventListener("load", init);
 
-/*
-const g = new CukasGame(3); // 3 players
-g.turn(); // Active player attacks
-g.turn(); // Next player defends
-*/
+      /*
+       const g = new CukasGame(3); // 3 players
+       g.turn(); // Active player attacks
+       g.turn(); // Next player defends
+      */
 
-</script>
+    </script>
 
-</head>
-<body>
-    <h1>Cards JS class</h1>
-
+  </head>
+  <body>
     <div id="container">
+        <div class="trump-area">
+          <h2>Kaudze un trumpis</h2>
+          <div bind="supply">X</div>
+        </div>
 
-        <h2>Kaudze un trumpis</h2>
-        <div bind="supply">X</div>
+        <div class="main-area">
+          <div class="slot">
+            <h2>Uzbrukums 1</h2>
+            <div bind="attack_1">X</div>
+          </div>
+          <div class="slot">
+            <h2>Uzbrukums 2</h2>
+            <div bind="attack_2">X</div>
+          </div>
+          <div class="slot">
+            <h2>Uzbrukums 3</h2>
+            <div bind="attack_3">X</div>
+          </div>
+          <div class="slot">
+            <h2>Uzbrukums 4</h2>
+            <div bind="attack_4">X</div>
+          </div>
+          <div class="slot">
+            <h2>Uzbrukums 5</h2>
+            <div bind="attack_5">X</div>
+          </div>
+          <div class="slot">
+            <h2>Uzbrukums 6</h2>
+            <div bind="attack_6">X</div>
+          </div>
+          <div class="slot">
+            <h2>Aizsardzība 1</h2>
+            <div bind="defence_1">X</div>
+          </div>
+          <div class="slot">
+            <h2>Aizsardzība 2</h2>
+            <div bind="defence_2">X</div>
+          </div>
+          <div class="slot">
+            <h2>Aizsardzība 3</h2>
+            <div bind="defence_3">X</div>
+          </div>
+          <div class="slot">
+            <h2>Aizsardzība 4</h2>
+            <div bind="defence_4">X</div>
+          </div>
+          <div class="slot">
+            <h2>Aizsardzība 5</h2>
+            <div bind="defence_5">X</div>
+          </div>
+          <div class="slot">
+            <h2>Aizsardzība 6</h2>
+            <div bind="defence_6">X</div>
+          </div>
+        </div>
 
-        <h2>Uzbrukums 1</h2>
-        <div bind="attack_1">X</div>
-        <h2>Uzbrukums 2</h2>
-        <div bind="attack_2">X</div>
-        <h2>Uzbrukums 3</h2>
-        <div bind="attack_3">X</div>
-        <h2>Uzbrukums 4</h2>
-        <div bind="attack_4">X</div>
-        <h2>Uzbrukums 5</h2>
-        <div bind="attack_5">X</div>
-        <h2>Uzbrukums 6</h2>
-        <div bind="attack_6">X</div>
-        <h2>Aizsardzība 1</h2>
-        <div bind="defence_1">X</div>
-        <h2>Aizsardzība 2</h2>
-        <div bind="defence_2">X</div>
-        <h2>Aizsardzība 3</h2>
-        <div bind="defence_3">X</div>
-        <h2>Aizsardzība 4</h2>
-        <div bind="defence_4">X</div>
-        <h2>Aizsardzība 5</h2>
-        <div bind="defence_5">X</div>
-        <h2>Aizsardzība 6</h2>
-        <div bind="defence_6">X</div>
+        <div class="hands">
+          <div id="hand1" class="hand">
+            <h2>Roka 1</h2>
+            <div bind="hand_1">X</div>
+          </div>
+          <div id="hand2" class="hand">
+            <h2>Roka 2</h2>
+            <div bind="hand_2">X</div>
+          </div>
+          <div id="hand3" class="hand">
+            <h2>Roka 3</h2>
+            <div bind="hand_3">X</div>
+          </div>
+          <div id="hand4" class="hand">
+            <h2>Roka 4</h2>
+            <div bind="hand_4">X</div>
+          </div>
+        </div>
 
-        <h2>Roka 1</h2>
-        <div bind="hand_1">X</div>
-        <h2>Roka 2</h2>
-        <div bind="hand_2">X</div>
-        <h2>Roka 3</h2>
-        <div bind="hand_3">X</div>
-        <h2>Roka 4</h2>
-        <div bind="hand_4">X</div>
-
-    </div>
-
-</body>
+      </div>
+  </body>
 </html>
