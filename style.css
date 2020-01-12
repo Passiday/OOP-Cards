@@ -1,0 +1,100 @@
+:root {
+  --primary-color-lightest: #f8f6ff;
+  --primary-color-lighter: #e7e5fd;
+  --primary-color: #d2cef9;
+  --primary-color-darker: #bab4f0;
+  --primary-color-darkest: #ada6f0; }
+
+* {
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', Helvetica; }
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 10px;
+  background: var(--primary-color-darkest); }
+
+#container {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  display: grid;
+  grid-template-areas: "main-area main-area main-area" "trump-area hands hands";
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 2fr 1fr;
+  grid-gap: 10px;
+  justify-items: center;
+  align-items: center; }
+  #container > * {
+    height: 100%;
+    width: 100%; }
+  #container .trump-area {
+    grid-area: trump-area;
+    background: var(--primary-color-lighter);
+    border: solid var(--primary-color-darker) 2px; }
+    #container .trump-area h2 {
+      margin: 0;
+      padding-left: 10px;
+      background: var(--primary-color); }
+    #container .trump-area > div {
+      padding: 5px; }
+  #container .main-area {
+    grid-area: main-area;
+    height: 95%;
+    width: 95%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr 1fr;
+    justify-content: center;
+    align-content: center;
+    grid-gap: 20px; }
+    #container .main-area .slot {
+      height: 100%;
+      width: 100%;
+      background: var(--primary-color);
+      border: solid var(--primary-color-darker) 2px;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      justify-items: center;
+      align-items: center; }
+      #container .main-area .slot h2 {
+        font-size: 0.7em;
+        letter-spacing: 1px;
+        text-transform: lowercase;
+        font-variant: small-caps; }
+      #container .main-area .slot > div {
+        height: 100%;
+        width: 100%;
+        background: var(--primary-color-lighter);
+        display: grid;
+        justify-content: center;
+        align-content: center; }
+  #container .hands {
+    grid-area: hands;
+    display: grid;
+    grid-auto-flow: column; }
+    #container .hands .hand {
+      background: var(--primary-color);
+      border-right: solid var(--primary-color-darker) 2px;
+      border-top: solid var(--primary-color-darker) 2px;
+      border-bottom: solid var(--primary-color-darker) 2px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      justify-items: center;
+      align-items: center; }
+      #container .hands .hand:nth-child(1) {
+        border-left: solid var(--primary-color-darker) 2px; }
+      #container .hands .hand h2 {
+        margin: 0;
+        font-size: 1.2em; }
+      #container .hands .hand > div {
+        background: var(--primary-color-lighter);
+        padding: 5px;
+        height: 100%;
+        width: 100%; }
+
+/*# sourceMappingURL=style.css.map */
