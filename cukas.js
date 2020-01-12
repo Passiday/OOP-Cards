@@ -118,16 +118,17 @@ class CukasGame {
       if(a.type==Card.TYPE_JOKER && b.type!=Card.TYPE_JOKER)return 1;
       if(a.type==Card.TYPE_JOKER && b.type==Card.TYPE_JOKER)return 0;
       if(b.type==Card.TYPE_JOKER)return -1;
-      const a_trump=a.suit==trump;
-      const b_trump=b.suit==trump;
+      const a_trump=a.suit==this.trump;
+      const b_trump=b.suit==this.trump;
       if(a.suit==b.suit){
         return Math.sign(a.rank-b.rank);
       } else if(a_trump || b_trump) {
           if(a_trump)return 1;
           if(b_trump)return -1;
+      } else {
+          console.warn("Warning: these are not comparable");
+          return false;
       }
-      console.warn("Warning: these are not comparable");
-      return false;
     }
 }
 ​
