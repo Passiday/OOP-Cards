@@ -145,12 +145,12 @@ class CukasGame {
       const b_trump=b.suit==this.trump;
       if(a.suit==b.suit){
         return Math.sign(a.rank-b.rank);
-      } else if(a_trump || b_trump) {
-          if(a_trump)return 1;
-          if(b_trump)return -1;
+      } else if (a_trump) {
+          return 1
+      } else if(b_trump) {
+        return -1;
       } else {
-          console.warn("Warning: these are not comparable");
-          return false;
+          return 0;
       }
     }
 }
