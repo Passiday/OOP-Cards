@@ -63,14 +63,20 @@ class CukasGame {
         if(playerId==(this.activePlayerId+1)%this.players.length) playersState = 2;
         //CukasPlayerPerspective.STATE_DEFENDING;
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
-        return {hand:CardSet.copy(this.players[playerId].hand), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:Card.copy(this.trump), state:playersState};
+        //{hand,attack,defence,otherHands,trumpis,state}
+        return {hand: CardSet.copy(this.players[playerId].hand), 
+            attack: [...this.attack], 
+            defence: [...this.defence], 
+            others: otherHands, 
+            trump: Card.copy(this.trump), 
+            state: playersState};
     }
 
     turn() {
         const attackPlayerId = this.activePlayerId;
         const defencePlayerId = (this.activePlayerId + 1) % this.players.length;
         this.turnPhase = CukasGame.PHASE_ATTACK;
-        const attack = this.players[attackPlayerId].attack(this.getGameInfo());
+        const attack = this.players[attackPlayerId].attack(this.createPerspective(attackPlayerId));
         let valid = true;
         for(let x = 0; x < attack.length; x++) {
             if(!this.players[attackPlayerId].hand.includes(attack[x])) { //make sure they actually have the cards
@@ -129,6 +135,23 @@ class CukasGame {
             this.players[defencePlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure defence has 6 cards
         }
         //console.log(this.players);
+
+    }
+    compareCards(a,b){//1 - a>b -1 - a<b 0 - a=b
+      if(a.type==Card.TYPE_JOKER && b.type!=Card.TYPE_JOKER)return 1;
+      if(a.type==Card.TYPE_JOKER && b.type==Card.TYPE_JOKER)return 0;
+      if(b.type==Card.TYPE_JOKER)return -1;
+      const a_trump=a.suit==this.trump;
+      const b_trump=b.suit==this.trump;
+      if(a.suit==b.suit){
+        return Math.sign(a.rank-b.rank);
+      } else if (a_trump) {
+          return 1
+      } else if(b_trump) {
+        return -1;
+      } else {
+          return 0;
+      }
     }
 }
 
@@ -147,8 +170,7 @@ class CukasPlayer {
     CukasPlayer(initialHand) {
         this.hand = initialHand;
     }
-
-    attack(gameInfo) {
+attack(perspective) {
         // Returns array of attack cards
         if(hand.length > 0) {
             return hand[0];
