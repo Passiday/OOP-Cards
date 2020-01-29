@@ -13,10 +13,12 @@ class CukasGame {
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
+    hands = []; //player hands
 
     gameState;
     activePlayerId;
     turnPhase;
+
 
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     constructor(playerCount) {
@@ -78,32 +80,42 @@ class CukasGame {
         this.turnPhase = CukasGame.PHASE_ATTACK;
         const attack = this.players[attackPlayerId].attack(this.createPerspective(attackPlayerId));
         let valid = true;
-        for(let x = 0; x < attack.length; x++) {
-            if(!this.players[attackPlayerId].hand.includes(attack[x])) { //make sure they actually have the cards
-                valid = false;
-            }
+        if(!attack.every(x => this.hands[attackPlayerId].includes(x))) { //make sure they actually have the cards
+            valid = false;
         }
         if(!valid) {
             throw new CukasGameException("invalid move","Invalid attack"); //preferably, this should just reask for an attack, but I have no idea how to do that without making a huge mess
         }
+        console.log("Player " + attackPlayerId + " attacks with:");
+        new CardSet(attack).log();
+        console.log("Player " + attackPlayerId + " had this hand:");
+        this.hands[attackPlayerId].log();
         for(let x = 0; x < attack.length; x++) {
-            this.players[attackPlayerId].hand = this.players[attackPlayerId].hand.splice(this.players[attackPlayerId].hand.indexOf(attack[x]), 1); //take the cards out of the deck
+            this.hands[attackPlayerId].cards.splice(this.hands[attackPlayerId].indexOf(attack[x]), 1); //take the cards out of the deck
         }
         this.attack = attack;
         this.turnPhase = CukasGame.PHASE_DEFEND;
-        const defence = this.players[defencePlayerId].defend(this.getGameInfo());
+        const defence = this.players[defencePlayerId].defend(this.createPerspective(defencePlayerId));
         if(defence == null) { //if null, just pick up the attack cards
-            this.players[defencePlayerId].deck.push(attack);
-            if(this.players[attackPlayerId].hand.length - 6 < 0) {
-                this.players[attackPlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure the attacker ends turn with 6 cards in hand
+            console.log("Player " + defencePlayerId + " picks up the cards.");
+            console.log("Player " + defencePlayerId + " had this hand:");
+            this.hands[defencePlayerId].log();
+            this.hands[defencePlayerId].cards.push(...attack); //add attack cards to defenders deck
+            if(this.hands[attackPlayerId].count - 6 < 0) {
+                this.hands[attackPlayerId].cards.push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].count - 6))); //make sure the attacker ends turn with 6 cards in hand
             }
+            this.activePlayerId = (this.activePlayerId + 2) % this.players.length; //increment player id by 2 since if you pick up cards, you sit out a turn
             return;
         }
         valid = true;
+        if(!defence[x].every(x => this.hands[defencePlayerId].includes(x))) { //make sure defence has the cards
+            valid = false;
+        }
+        if(!valid) {
+            throw "Invalid defence!"; //same as the invalid attack error
+        }
         for(let x = 0; x < attack.length; x++) {
-            if(!this.players[defencePlayerId].hand.includes(defence[x])) { //make sure defence has the cards
-                valid = false;
-            }
+            //TODO: Make a card comparison function in Card class
             if(defence[x].suit != this.trump[0].suit) { //make sure the cards can beat the attack cards
                 if(attack[x].suit != defence[x].suit) {
                     valid = false;
@@ -121,19 +133,24 @@ class CukasGame {
             }
         }
         if(!valid) {
-            this.players[attackPlayerId].hand.push(attack); //put attack cards back in hand
             throw new CukasGameException("invalid move","Invalid defence")
         }
+
+        console.log("Player " + defencePlayerId + " defends with:")
+        new CardSet(defence).log();
+        console.log("Player " + defencePlayerId + " had this hand:");
+        this.hands[defencePlayerId].log();
         for(let x = 0; x < attack.length; x++) {
-            this.players[defencePlayerId].hand = this.players[defencePlayerId].hand.splice(this.players[defencePlayerId].hand.indexOf(defence[x]), 1); //remove played cards from hand
+           this.hands[defencePlayerId].splice(this.hands[defencePlayerId].indexOf(defence[x]), 1); //remove played cards from hand
         }
         this.defence = defence;
-        if(this.players[attackPlayerId].hand.length - 6 < 0) {
-            this.players[attackPlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure attack has 6 cards
+        if(this.hands[attackPlayerId].length - 6 < 0) {
+            this.hands[attackPlayerId].push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].length - 6))); //make sure attack has 6 cards
         }
-        if(this.players[defencePlayerId].hand.length - 6 < 0) {
-            this.players[defencePlayerId].hand.push(this.deck.getRandomSet(Math.abs(this.players[attackPlayerId].hand.length - 6))); //make sure defence has 6 cards
+        if(this.hands[defencePlayerId].length - 6 < 0) {
+            this.hands[defencePlayerId].push(this.deck.getRandomSet(Math.abs(this.hands[attackPlayerId].length - 6))); //make sure defence has 6 cards
         }
+        this.activePlayerId = (this.activePlayerId + 1) % this.players.length; //increment active player id
         //console.log(this.players);
 
     }
@@ -164,16 +181,15 @@ CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
 
 class CukasPlayer {
-    hand = null; // CardSet
-
-    //Constructor - initialises this class with a basic hand.
-    CukasPlayer(initialHand) {
-        this.hand = initialHand;
+    constructor () {
+        
     }
 attack(perspective) {
         // Returns array of attack cards
-        if(hand.length > 0) {
-            return hand[0];
+        let arr = [];
+        if(gameInfo.hand.count > 0) {
+            arr.push(gameInfo.hand.cards[0]);
+            return arr;
         }
     }
 
