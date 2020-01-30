@@ -5,7 +5,6 @@ fixture `Cards Test`
 //https://devexpress.github.io/testcafe/documentation/test-api/obtaining-data-from-the-client/
 //Use this to write tests testing js functions.
 const includesTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     const cardSet = CardSet.standardPack();
     return cardSet.includes(card);
@@ -15,7 +14,6 @@ test('CardSet.includes(card) test', async t => {
     await t.expect(result).ok("Includes returned an incorrect result!");
 });
 const indexTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     const cardSet = CardSet.standardPack();
     return cardSet.indexOf(card);
@@ -25,7 +23,6 @@ test('CardSet.indexOf(card) test', async t => {
     await t.expect(result).eql(31, "indexOf returned an incorrect result!");
 });
 const countTest = ClientFunction(() => {
-    init();
     const cardSet = CardSet.standardPack();
     return cardSet.count;
 });
@@ -34,7 +31,6 @@ test('CardSet.count test', async t => {
     await t.expect(result).eql(52, "Count returned an incorrect result!");
 });
 const arrayTest = ClientFunction(() => {
-    init();
     const cardSet = CardSet.standardPack();
     return cardSet.asArray()[0].suit == cardSet.cards[0].suit && cardSet.asArray()[0].rank == cardSet.cards[0].rank;
 });
@@ -43,7 +39,6 @@ test('CardSet.asArray() test', async t => {
     await t.expect(result).ok("asArray returned an incorrect result!");
 });
 const topTest = ClientFunction(() => {
-    init();
     const cardSet = CardSet.standardPack();
     const card = cardSet.takeTop(1).cards[0];
     return card.suit == 0 && card.rank == 1;
@@ -53,7 +48,6 @@ test('CardSet.takeTop(n) test', async t => {
     await t.expect(result).ok("takeTop returned an incorrect result!");
 });
 const copyTest = ClientFunction(() => {
-    init();
     const cardSet = CardSet.standardPack();
     const copySet = cardSet.copy();
     return cardSet.cards.every((x, n) => x.rank == copySet.cards[n].rank && x.suit == copySet.cards[n].suit);
@@ -63,7 +57,6 @@ test('CardSet.copy() test', async t => {
     await t.expect(result).ok("copyTop returned an incorrect result!");
 });
 const stringTest = ClientFunction(() => {
-    init();
     const cardSet = CardSet.standardPack();
     return cardSet.toString();
 });
@@ -72,27 +65,22 @@ test('CardSet.copy() test', async t => {
     await t.expect(result).eql("A♥, 2♥, 3♥, 4♥, 5♥, 6♥, 7♥, 8♥, 9♥, 10♥, J♥, Q♥, K♥, A♠, 2♠, 3♠, 4♠, 5♠, 6♠, 7♠, 8♠, 9♠, 10♠, J♠, Q♠, K♠, A♣, 2♣, 3♣, 4♣, 5♣, 6♣, 7♣, 8♣, 9♣, 10♣, J♣, Q♣, K♣, A♦, 2♦, 3♦, 4♦, 5♦, 6♦, 7♦, 8♦, 9♦, 10♦, J♦, Q♦, K♦", "toString returned an incorrect result!");
 });
 const cardSymbolTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     return card.getSuitSymbol();
 });
 const cardStringTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     return card.toString();
 });
 const cardNormalTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     return card.isNormal();
 });
 const cardJokerTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     return card.isJoker();
 });
 const cardCopyTest = ClientFunction(() => {
-    init();
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
     const copy = card.copy();
     return (card.rank == copy.rank && card.type == copy.type && card.suit == copy.suit);
@@ -110,7 +98,6 @@ test('cardObj Test', async t => {
     await t.expect(result).ok("Copy is not equal to its' original.");
 });
 const cukasGameTest = ClientFunction(() => {
-    init();
     try {
         new CukasGame(17);
         return false;
@@ -123,7 +110,6 @@ test('CukasGame test', async t => {
     await t.expect(result).ok("Incorrect amount of players was not handled!");
 });
 const cukasGameEqualsTest = ClientFunction(() => {
-    init();
     let x = new CukasGame(3);
     return x.compareCards(new Card(Card.TYPE_NORMAL, 2, 6), new Card(Card.TYPE_NORMAL, 2, 7)) == -1;
 });
