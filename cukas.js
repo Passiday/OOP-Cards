@@ -22,19 +22,34 @@ class CukasGame {
 
     //Constructor 1 - creates a regular game object with 2 to 6 players.
     constructor(playerCount) {
+        this.controller = null;
         if(isNaN(playerCount) || playerCount < 2 || playerCount > 6) {
             throw new CukasGameException("player count",`Can't make a game with ${playerCount} players`);
         }
+        this.playerCount = playerCount;
+        this.gameState = CukasGame.STATE_UNINITIALIZED
+    }
+
+    init() {
         this.gameState = CukasGame.STATE_INIT;
         this.deck = CardSet.standardPack();
-        for(let x = 0; x < playerCount; x++) {
-            this.players[x] = new CukasPlayer();
-            this.hands[x] = this.deck.getRandomSet(6);
+        // TODO: shuffle the deck and then just give the players top 6 cards. Also, just pick the trump card from the top.
+        for(let x = 0; x < this.playerCount; x++) {
+            const playerHand = this.deck.getRandomSet(6);
+            this.players[x] = new CukasPlayer(playerHand);
+            this.event("hand", {playerId:x, cards:playerHand});
         }
         this.trump = this.deck.getRandomSet(1);
-        this.deck.addCard(this.trump);
+        this.deck.addCard(this.trump); // TODO: Must add at the end
+
         this.gameState = CukasGame.STATE_GAME;
-        this.activePlayerId = 0;
+
+        this.event("supply", {cards:this.deck, trump:this.trump});
+    }
+
+    event(eventType, eventInfo) {
+        if (!this.controller) return;
+        this.controller.update(eventType, eventInfo);
     }
 
     //method that return a ready-to-send info about the situation about the game
@@ -50,7 +65,13 @@ class CukasGame {
         if(playerId==(this.activePlayerId+1)%this.players.length) playersState = 2;
         //CukasPlayerPerspective.STATE_DEFENDING;
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
-        return {hand:this.hands[playerId].copy(), attack:[...this.attack], defence:[...this.defence], others:otherHands, trump:this.trump.copy(), state:playersState};
+        //{hand,attack,defence,otherHands,trumpis,state}
+        return {hand: CardSet.copy(this.players[playerId].hand), 
+            attack: [...this.attack], 
+            defence: [...this.defence], 
+            others: otherHands, 
+            trump: Card.copy(this.trump), 
+            state: playersState};
     }
 
     turn() {
@@ -131,9 +152,27 @@ class CukasGame {
         }
         this.activePlayerId = (this.activePlayerId + 1) % this.players.length; //increment active player id
         //console.log(this.players);
+
+    }
+    compareCards(a,b){//1 - a>b -1 - a<b 0 - a=b
+      if(a.type==Card.TYPE_JOKER && b.type!=Card.TYPE_JOKER)return 1;
+      if(a.type==Card.TYPE_JOKER && b.type==Card.TYPE_JOKER)return 0;
+      if(b.type==Card.TYPE_JOKER)return -1;
+      const a_trump=a.suit==this.trump;
+      const b_trump=b.suit==this.trump;
+      if(a.suit==b.suit){
+        return Math.sign(a.rank-b.rank);
+      } else if (a_trump) {
+          return 1
+      } else if(b_trump) {
+        return -1;
+      } else {
+          return 0;
+      }
     }
 }
 
+CukasGame.STATE_UNINITIALIZED = 0;
 CukasGame.STATE_INIT = 1;
 CukasGame.STATE_GAME = 2;
 CukasGame.STATE_FINISHED = 3;
@@ -145,8 +184,7 @@ class CukasPlayer {
     constructor () {
         
     }
-
-    attack(gameInfo) {
+attack(perspective) {
         // Returns array of attack cards
         let arr = [];
         if(gameInfo.hand.count > 0) {
