@@ -5,7 +5,7 @@ fixture `Cards Test`
 //https://devexpress.github.io/testcafe/documentation/test-api/obtaining-data-from-the-client/
 //Use this to write tests testing js functions.
 const includesTest = ClientFunction(() => {
-    const card = new Card(Card.TYPE_NORMAL, 2, 6);
+    const card = new Card(Card.TYPE_NORMAL, 2, 4);
     const cardSet = CardSet.standardPack();
     return cardSet.includes(card);
 });
