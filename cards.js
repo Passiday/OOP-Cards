@@ -63,7 +63,9 @@ class Card {
   }
 
   equals(card) {
-    return this.suit == card.suit && this.rank == card.rank && this.type == card.type;
+    if(this.type == Card.TYPE_JOKER)
+      return  this.type == card.type;
+    return this.suit == card.suit && this.rank == card.rank;
   }
 }
 

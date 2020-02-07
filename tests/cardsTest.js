@@ -11,7 +11,7 @@ const includesTest = ClientFunction(() => {
 });
 test('CardSet.includes(card) test', async t => {
     const result = await includesTest();
-    await t.expect(!result).ok("Includes returned an incorrect result!");
+    await t.expect(result).ok("Includes returned an incorrect result!");
 });
 const indexTest = ClientFunction(() => {
     const card = new Card(Card.TYPE_NORMAL, 2, 6);
