@@ -61,6 +61,12 @@ class Card {
   copy(){
     return new Card(this.type, this.suit, this.rank);
   }
+
+  equals(card) {
+    if(this.type == Card.TYPE_JOKER)
+      return  this.type == card.type;
+    return this.suit == card.suit && this.rank == card.rank;
+  }
 }
 
 Card.RANK_ACE = 1;
@@ -117,12 +123,12 @@ class CardSet {
   }
 
   includes(card) {
-    let result = this.cards.filter(x => new CukasGame().compareCards(x, card) == 0)[0] ? true : false; //filter out cards that match and select the 1st element, if it exists, result is true, if it doesn't, result is false
+    let result = this.cards.filter(x => x.equals(card))[0] ? true : false; //filter out cards that match and select the 1st element, if it exists, result is true, if it doesn't, result is false
     return result; //return whether the card is inside the CardSet
   }
 
   indexOf(card) {
-    return this.cards.findIndex(x => new CukasGame().compareCards(x, card) == 0); //find the first card that matches the requested card and return index
+    return this.cards.findIndex(x => x.equals(card)); //find the first card that matches the requested card and return index
   }
 
   takeTop(count) {
