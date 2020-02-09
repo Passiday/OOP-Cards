@@ -8,15 +8,15 @@ class VEventTarget{
                 this.events[type].push(func);
             }
         }else{
-            this.events[type] = [];
-            this.events[type].push(func);
+            this.events[type] = [func];
         }
     }
     dispatchEvent(e){
-        e.currenTarget = this;
+        e.currentTarget = this;
+        e.target = this;
         if(e.type in this.events){
             this.events[e.type].forEach(func => {
-                func(e);
+                func.call(this,e);
             });
         }
     }
@@ -34,7 +34,8 @@ class VEventTarget{
 class VEvent{
     constructor(type,customEventInit){
         this.type = type;
-        if(customEventInit != undefined)
+        this.detail = null;
+        if(customEventInit !== undefined)
             this.detail = customEventInit.detail;
     }
 }
