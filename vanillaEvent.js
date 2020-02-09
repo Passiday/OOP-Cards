@@ -1,36 +1,40 @@
 class VEventTarget{
-    events = [];
-    constructor(name){
-        this.name = name;
-    }
+    events = {};
     addEventListener(type,func){
-        this.events.push({"type":type,"func":func})
+        if(type in this.events){
+            if(this.events[type].includes(func)){
+                throw new Error("Event listener with the specified type and function: " + type + " " + func + " already exists");
+            }else{
+                this.events[type].push(func);
+            }
+        }else{
+            this.events[type] = [];
+            this.events[type].push(func);
+        }
     }
     dispatchEvent(e){
-        for(let i =0;i < this.events.length;i++){
-            if(this.events[i].type == e.type){
-                this.events[i].func(e);
-            }
+        e.currenTarget = this;
+        if(e.type in this.events){
+            this.events[e.type].forEach(func => {
+                func(e);
+            });
         }
     }
     removeEventListener(type,func){
-        let found = false;
-        for(let i =0;i < this.events.length;i++){
-            if(this.events[i].type == type && this.events[i].func == func){
-                this.events.splice(i,1);
-                found = true;
+        if(type in this.events){
+            let index = this.events[type].indexOf(func);
+            if(index != -1){
+                this.events[type].splice(index,1);
+                return;
             }
         }
-        if(!found){
-            throw "Could not find event with the specified function and type: " + type + " " + func;
-        }
+        throw new Error("Could not find event listener with the specified type and function: " + type + " " + func);
     }
-
 }
 class VEvent{
-    constructor(type,currenTarget,detail){
+    constructor(type,customEventInit){
         this.type = type;
-        this.currenTarget = currenTarget;
-        this.detail = detail;
+        if(customEventInit != undefined)
+            this.detail = customEventInit.detail;
     }
 }
