@@ -11,11 +11,41 @@
 
       let cukasController;
 
-      function init() {
-          const cukasGame = new CukasGame(4); // Model
+      function newGame(playerCount, newController = false){
+        const cukasGame = new CukasGame(playerCount); // Model
+
+        if(cukasController === undefined || newController){
           const cukasContainer = document.getElementById("container"); // View
           cukasController = new CukasController(cukasGame, cukasContainer); // Controller
-          cukasGame.init();
+        } else {
+          cukasController.updateModel(cukasGame);
+        }
+
+        cukasGame.init();
+
+        return cukasGame;
+      }
+
+      function init() {
+        newGame();
+
+        /* ----- Game save/load test -----
+        const oldGame = newGame(4, true);
+
+        setTimeout(()=>{
+          newGame(4, true);
+        }, 5000);
+
+        setTimeout(()=>{
+          const loadedGame = JSON.parse(JSON.stringify(oldGame), cukasGameRev);
+          console.log(loadedGame);
+          
+          cukasController.updateModel(loadedGame);
+          loadedGame.init();
+        }, 10000);
+        */
+
+        console.log("Game initialized!");
       }
 
       window.addEventListener("load", init);

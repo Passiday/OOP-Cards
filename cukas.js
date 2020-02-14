@@ -13,36 +13,59 @@ class CukasGame {
     trump = null; // Card
     attack = []; // Attack cards
     defence = []; // Defence cards
-    hands = []; //player hands
 
     gameState;
     activePlayerId;
     turnPhase;
 
-
     //Constructor 1 - creates a regular game object with 2 to 6 players.
-    constructor(playerCount) {
+    constructor(playerCount, loadState = null) {
         this.controller = null;
+
         if(isNaN(playerCount) || playerCount < 2 || playerCount > 6) {
             throw new CukasGameException("player count",`Can't make a game with ${playerCount} players`);
         }
+
         this.playerCount = playerCount;
-        this.gameState = CukasGame.STATE_UNINITIALIZED
+
+        if(loadState === null) {
+            this.gameState = CukasGame.STATE_UNINITIALIZED
+        } else {
+            // Set new values
+            this.gameState = loadState.gameState;
+            this.players = loadState.players;
+            this.deck = loadState.deck;
+            this.trump = loadState.trumpCard;
+            this.attack = loadState.attackCards;
+            this.defence = loadState.defenseCards;
+            this.activePlayerId = loadState.activePlayer;
+            this.turnPhase = loadState.turnPhase;
+
+            this.gameLoaded = true;
+        }
     }
 
     init() {
-        this.gameState = CukasGame.STATE_INIT;
-        this.deck = CardSet.standardPack();
-        // TODO: shuffle the deck and then just give the players top 6 cards. Also, just pick the trump card from the top.
-        for(let x = 0; x < this.playerCount; x++) {
-            const playerHand = this.deck.getRandomSet(6);
-            this.players[x] = new CukasPlayer(playerHand);
-            this.event("hand", {playerId:x, cards:playerHand});
+        if(!this.gameLoaded){
+            this.gameState = CukasGame.STATE_INIT;
+            this.deck = CardSet.standardPack();
+    
+            // TODO: shuffle the deck and then just give the players top 6 cards. Also, just pick the trump card from the top.
+            for(let x = 0; x < this.playerCount; x++) {
+                const playerHand = this.deck.getRandomSet(6);
+                this.players[x] = new CukasPlayer(playerHand);
+                this.event("hand", {playerId:x, cards:playerHand});
+            }
+    
+            this.trump = this.deck.getRandomSet(1);
+            this.deck.addCard(this.trump); // TODO: Must add at the end
+            this.gameState = CukasGame.STATE_GAME;
+        } else {
+            //Update player hands
+            for(let i = 0; i < this.playerCount; i++) {
+                this.event("hand", {playerId:i, cards:this.players[i].hand});
+            }
         }
-        this.trump = this.deck.getRandomSet(1);
-        this.deck.addCard(this.trump); // TODO: Must add at the end
-
-        this.gameState = CukasGame.STATE_GAME;
 
         this.event("supply", {cards:this.deck, trump:this.trump});
     }
@@ -55,9 +78,11 @@ class CukasGame {
     //method that return a ready-to-send info about the situation about the game
     createPerspective(playerId) {
         var otherHands=[];//int[] contains number of cards for the next players in order
+
         for (var i = playerId; i != playerId; i=(i+1)%this.players.length) {//fills otherHands array
           otherHands.push(this.players[i].count);
         }
+
         var playersState=0;
         //CukasPlayerPerspective.STATE_WAITING;
         if(playerId==this.activePlayerId) playersState = 1
@@ -66,6 +91,7 @@ class CukasGame {
         //CukasPlayerPerspective.STATE_DEFENDING;
         //var Perspective=new CukasPlayerPerspective(CardSet.copy(his.players[playerId].hand), [...this.attack], [...this.defence], otherHands, Card.copy(this.trump), playersState);
         //{hand,attack,defence,otherHands,trumpis,state}
+
         return {hand: CardSet.copy(this.players[playerId].hand), 
             attack: [...this.attack], 
             defence: [...this.defence], 
@@ -170,6 +196,21 @@ class CukasGame {
           return 0;
       }
     }
+
+    toJSON(){
+        return {
+            "type": "cukasGame",
+            "gameState": this.gameState,
+            "players": this.players,
+            "deck": this.deck,
+            "playerCount": this.playerCount,
+            "trumpCard": this.trump,
+            "attackCards": this.attack,
+            "defenseCards": this.defence,
+            "activePlayer": this.activePlayerId,
+            "turnPhase": this.turnPhase
+        };
+    }
 }
 
 CukasGame.STATE_UNINITIALIZED = 0;
@@ -181,10 +222,11 @@ CukasGame.PHASE_ATTACK = 1;
 CukasGame.PHASE_DEFEND = 2;
 
 class CukasPlayer {
-    constructor () {
-        
+    constructor (starterHand) {
+        this.hand = starterHand;
     }
-attack(perspective) {
+
+    attack(perspective) {
         // Returns array of attack cards
         let arr = [];
         if(gameInfo.hand.count > 0) {
@@ -196,6 +238,13 @@ attack(perspective) {
     defend(gameInfo) {
         // Returns array of defence cards or null, if the player picks up
         return null;
+    }
+
+    toJSON(){
+        return {
+            "type": "player",
+            "hand": this.hand
+        };
     }
 }
 /*
@@ -219,3 +268,48 @@ CukasPlayerPerspective.STATE_ATTACKING = 0;//various states
 CukasPlayerPerspective.STATE_DEFENDING = 1;
 CukasPlayerPerspective.STATE_WAITING = 2;
 */
+
+function cukasGameRev(key, value){
+    if (cukasGameRev.topLevel === undefined){
+        cukasGameRev.topLevel = this;
+    }
+
+    let finalCall = key === "" && this[""] === cukasGameRev.topLevel;
+
+    // Check for custom objects
+    if(typeof value === "object" && value !== null){
+        switch(value.type){
+            case "card":
+                if(("suit" in value) && ("rank" in value) && ("cardType" in value)){
+                    return new Card(value.cardType, value.suit, value.rank);
+                }
+
+                break;
+
+            case "cardSet":
+                if("cards" in value){
+                    return new CardSet(value.cards);
+                }
+
+                break;
+
+            case "player":
+                if("hand" in value){
+                    return new CukasPlayer(value.hand);
+                }
+
+                break;
+
+            case "cukasGame":
+                if(("gameState" in value) && ("players" in value) && ("deck" in value) && 
+                    ("trumpCard" in value) && ("playerCount" in value))
+                {
+                    return new CukasGame(value.playerCount, value);
+                }
+
+                break;
+        }
+    }
+
+    return value;
+}

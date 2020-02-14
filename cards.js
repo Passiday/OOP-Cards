@@ -67,6 +67,15 @@ class Card {
       return  this.type == card.type;
     return this.suit == card.suit && this.rank == card.rank;
   }
+
+  toJSON(){
+    return {
+      "type": "card",
+      "suit": this.suit,
+      "rank": this.rank,
+      "cardType": this.type
+    };
+  }
 }
 
 Card.RANK_ACE = 1;
@@ -156,6 +165,13 @@ class CardSet {
       arr.push("color:black");
     }
     console.log(str.replace(/♥|♦/g, "%c$&%c"), ...arr);
+  }
+
+  toJSON(){
+    return {
+      "type": "cardSet",
+      "cards": this.cards
+    };
   }
 }
 
