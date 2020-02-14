@@ -27,21 +27,23 @@
       }
 
       function init() {
-        newGame();
+        newGame(4);
 
-        /* ----- Game save/load test -----
+        // ----- Game save/load test -----
+        /*
         const oldGame = newGame(4, true);
+        const oldGameJSONData = JSON.stringify(oldGame); // Get current game as a JSON string
 
         setTimeout(()=>{
           newGame(4, true);
         }, 5000);
 
         setTimeout(()=>{
-          const loadedGame = JSON.parse(JSON.stringify(oldGame), cukasGameRev);
+          const loadedGame = JSON.parse(oldGameJSONData, cukasGameRev); // Parse JSON string into CukasGame object using custom reviver
           console.log(loadedGame);
           
-          cukasController.updateModel(loadedGame);
-          loadedGame.init();
+          cukasController.updateModel(loadedGame); // Update controller with new model object
+          loadedGame.init(); // Initialize the loaded game (updates the deck and hands onscreen)
         }, 10000);
         */
 
