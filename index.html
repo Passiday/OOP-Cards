@@ -32,14 +32,17 @@
         // ----- Game save/load test -----
         /*
         const oldGame = newGame(4, true);
-        const oldGameJSONData = JSON.stringify(oldGame); // Get current game as a JSON string
+        const oldGameJSONData = JSON.stringify(oldGame, cukasGameRepl); // Get current game as a JSON string using custom replacer to insert metadata
 
         setTimeout(()=>{
           newGame(4, true);
         }, 5000);
 
         setTimeout(()=>{
-          const loadedGame = JSON.parse(oldGameJSONData, cukasGameRev); // Parse JSON string into CukasGame object using custom reviver
+          const loadedSave = JSON.parse(oldGameJSONData, cukasGameRev); // Parse JSON string into CukasGame object using custom reviver
+          const loadedGame = loadedSave.saveData;
+
+          console.log("Game saved at " + loadedSave.created);
           console.log(loadedGame);
           
           cukasController.updateModel(loadedGame); // Update controller with new model object

@@ -313,3 +313,17 @@ function cukasGameRev(key, value){
 
     return value;
 }
+
+function cukasGameRepl(key, value){
+    console.log(key);
+    if(key === "" && !cukasGameRepl.notFirst){
+        cukasGameRepl.notFirst = true;
+
+        return {
+            created: new Date(),
+            saveData: value
+        };
+    }
+
+    return value;
+}
