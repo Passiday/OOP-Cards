@@ -37,7 +37,7 @@ class CukasGame {
             this.deck = loadState.deck;
             this.trump = loadState.trumpCard;
             this.attack = loadState.attackCards;
-            this.defence = loadState.defenseCards;
+            this.defence = loadState.defenceCards;
             this.activePlayerId = loadState.activePlayer;
             this.turnPhase = loadState.turnPhase;
 
@@ -206,7 +206,7 @@ class CukasGame {
             "playerCount": this.playerCount,
             "trumpCard": this.trump,
             "attackCards": this.attack,
-            "defenseCards": this.defence,
+            "defenceCards": this.defence,
             "activePlayer": this.activePlayerId,
             "turnPhase": this.turnPhase
         };
@@ -274,7 +274,11 @@ function cukasGameRev(key, value){
         cukasGameRev.topLevel = this;
     }
 
-    let finalCall = key === "" && this[""] === cukasGameRev.topLevel;
+	let finalCall = key === "" && this[""] === cukasGameRev.topLevel;
+	
+	if(key === "created"){
+		return new Date(value);
+	}
 
     // Check for custom objects
     if(typeof value === "object" && value !== null){
@@ -315,7 +319,6 @@ function cukasGameRev(key, value){
 }
 
 function cukasGameRepl(key, value){
-    console.log(key);
     if(key === "" && !cukasGameRepl.notFirst){
         cukasGameRepl.notFirst = true;
 
