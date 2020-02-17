@@ -1,0 +1,29 @@
+{
+  "name": "OOP-Cards",
+  "version": "1.0.0",
+  "description": "OOP Cards is an implementation of [durak](https://en.wikipedia.org/wiki/Durak) - a well known card game.",
+  "main": "cards.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Phanty133/OOP-Cards.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Phanty133/OOP-Cards/issues"
+  },
+  "homepage": "https://github.com/Phanty133/OOP-Cards#readme",
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1"
+  }
+}
