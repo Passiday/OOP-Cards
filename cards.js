@@ -1,72 +1,80 @@
 class Card {
-  // public class fields in Chrome since V72. In Firefox: experimental feature
-  type = Card.TYPE_NORMAL;
-  style;
-  back;
+	// public class fields in Chrome since V72. In Firefox: experimental feature
+	/* eslint-disable lines-between-class-members */
+	type = Card.TYPE_NORMAL;
+	style;
+	back;
+	/* eslint-enable lines-between-class-members */
 
-  constructor(type, suit, rank) {
-    this.type = type;
-    if (type === Card.TYPE_NORMAL) {
-      this.suit = suit;
-      this.rank = rank;
-    }
-  }
-  getSuitSymbol() {
-    switch(this.suit) {
-      case Card.SUIT_CLUBS:
-      return "♣";
-      case Card.SUIT_DIAMONDS:
-      return "♦";
-      case Card.SUIT_HEARTS:
-      return "♥";
-      case Card.SUIT_SPADES:
-      return "♠";
-    }
-  }
-  toString() {
-    if(this.isNormal()) {
-      let symbol=this.getSuitSymbol();
-      switch(this.rank) {
-        case Card.RANK_JACK:
-          return "J" + symbol;
-        case Card.RANK_QUEEN:
-          return "Q" + symbol;
-        case Card.RANK_KING:
-          return "K" + symbol;
-        case Card.RANK_ACE:
-          return "A" + symbol;
-        default:
-          return this.rank + symbol;
-      }
-    } else {
-      return "★";
-    }
-  }
+	constructor(type, suit, rank) {
+		this.type = type;
+		if (type === Card.TYPE_NORMAL) {
+			this.suit = suit;
+			this.rank = rank;
+		}
+	}
 
-  log() {
-    const str = this.toString();
-    if(str.includes("♥") || str.includes("♦"))
-      console.log(str.replace(/♥|♦/g, "%c$&"), "color: red")
-    else
-      console.log(str);
-  }
+	getSuitSymbol() {
+		switch (this.suit) {
+			case Card.SUIT_CLUBS:
+				return "♣";
+			case Card.SUIT_DIAMONDS:
+				return "♦";
+			case Card.SUIT_HEARTS:
+				return "♥";
+			case Card.SUIT_SPADES:
+				return "♠";
+			default:
+				return null;
+		}
+	}
 
-  isNormal() {
-    return this.type === Card.TYPE_NORMAL;
-  }
+	toString() {
+		if (this.isNormal()) {
+			const symbol = this.getSuitSymbol();
+			switch (this.rank) {
+				case Card.RANK_JACK:
+					return `J${symbol}`;
+				case Card.RANK_QUEEN:
+					return `Q${symbol}`;
+				case Card.RANK_KING:
+					return `K${symbol}`;
+				case Card.RANK_ACE:
+					return `A${symbol}`;
+				default:
+					return this.rank + symbol;
+			}
+		} else {
+			return "★";
+		}
+	}
 
-  isJoker() {
-    return this.type === Card.TYPE_JOKER;
-  }
-  copy(){
-    return new Card(this.type, this.suit, this.rank);
-  }
+	log() {
+		const str = this.toString();
+		if (str.includes("♥") || str.includes("♦")) {
+			console.log(str.replace(/♥|♦/g, "%c$&"), "color: red");
+		} else {
+			console.log(str);
+		}
+	}
 
-  equals(card) {
-    if(this.type == Card.TYPE_JOKER)
-      return  this.type == card.type;
-    return this.suit == card.suit && this.rank == card.rank;
-  }
+	isNormal() {
+		return this.type === Card.TYPE_NORMAL;
+	}
+
+	isJoker() {
+		return this.type === Card.TYPE_JOKER;
+	}
+
+	copy() {
+		return new Card(this.type, this.suit, this.rank);
+	}
+
+	equals(card) {
+		if (this.type === Card.TYPE_JOKER) return this.type === card.type;
+
+		return this.suit === card.suit && this.rank === card.rank;
+	}
 }
 
 Card.RANK_ACE = 1;
@@ -82,99 +90,116 @@ Card.SUIT_CLUBS = 2;
 Card.SUIT_DIAMONDS = 3;
 
 class CardSet {
-  cards = [];
-  constructor(cards) {
-    this.cards = cards || [];
-  }
-  addCard(card) {
-    this.cards.push(card);
-  }
+	cards = [];
 
-  addSet(cardSet) {
-    this.cards = this.cards.concat(cardSet.cards);
-  }
+	constructor(cards) {
+		this.cards = cards || [];
+	}
 
-  get count() {
-    return this.cards.length;
-  }
+	addCard(card) {
+		this.cards.push(card);
+	}
 
-  asArray(){
-    return this.cards.map(x => x.copy());
-  }
+	addSet(cardSet) {
+		this.cards = this.cards.concat(cardSet.cards);
+	}
 
-  getRandomSet(count) {
-    // Makes a new CardSet object
-    // Fills it with <count> random cards from the current set
-    // Removes these cards from the current set
-    // Returns the new set
-    let cardSet = new CardSet();
-    for(let x = 0; x < count; x++) {
-      let val = Math.floor(Math.random()*this.cards.length);
-      cardSet.addCard(this.cards[val]);
-      this.cards.splice(val, 1);
-    }
-    return cardSet;
-  }
-  shuffle() {
-    for (let i = this.cards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
-    }
-  }
+	get count() {
+		return this.cards.length;
+	}
 
-  includes(card) {
-    let result = this.cards.filter(x => x.equals(card))[0] ? true : false; //filter out cards that match and select the 1st element, if it exists, result is true, if it doesn't, result is false
-    return result; //return whether the card is inside the CardSet
-  }
+	asArray() {
+		return this.cards.map((x) => x.copy());
+	}
 
-  indexOf(card) {
-    return this.cards.findIndex(x => x.equals(card)); //find the first card that matches the requested card and return index
-  }
+	getRandomSet(count) {
+		// Makes a new CardSet object
+		// Fills it with <count> random cards from the current set
+		// Removes these cards from the current set
+		// Returns the new set
+		const cardSet = new CardSet();
 
-  takeTop(count) {
-    if (this.cards.length < count) throw new Error("Not enough cards in set");
-    return new CardSet(this.cards.splice(0, count));
-  }
+		for (let x = 0; x < count; x++) {
+			const val = Math.floor(Math.random() * this.cards.length);
+			cardSet.addCard(this.cards[val]);
+			this.cards.splice(val, 1);
+		}
 
-  fillUpTo(fromSet, count) {
-    let toBeAdded = count - this.cards.length;
-    if (toBeAdded <= 0) return;
-    this.addSet(fromSet.takeTop(toBeAdded));
-  }
-  copy(){
-    return new CardSet(this.asArray());
-  }
-  toString() {
-    return this.cards.join(", ");
-  }
+		return cardSet;
+	}
 
-  log() {
-    const str = this.toString();
-    let arr = [];
-    for(var x = 0; x < (str.match(/♥|♦/g) || []).length; x++) {
-      arr.push("color:red");
-      arr.push("color:black");
-    }
-    console.log(str.replace(/♥|♦/g, "%c$&%c"), ...arr);
-  }
+	shuffle() {
+		for (let i = this.cards.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
+		}
+	}
+
+	includes(card) {
+		/**
+		 * filter out cards that match and select the 1st element,
+		 * if it exists, result is true, if it doesn't, result is false
+		 */
+		const result = this.cards.filter((x) => x.equals(card))[0];
+		return !!result; // return whether the card is inside the CardSet
+	}
+
+	indexOf(card) {
+		// find the first card that matches the requested card and return index
+		return this.cards.findIndex((x) => x.equals(card));
+	}
+
+	takeTop(count) {
+		if (this.cards.length < count) throw new Error("Not enough cards in set");
+		return new CardSet(this.cards.splice(0, count));
+	}
+
+	fillUpTo(fromSet, count) {
+		const toBeAdded = count - this.cards.length;
+		if (toBeAdded <= 0) return;
+		this.addSet(fromSet.takeTop(toBeAdded));
+	}
+
+	copy() {
+		return new CardSet(this.asArray());
+	}
+
+	toString() {
+		return this.cards.join(", ");
+	}
+
+	log() {
+		const str = this.toString();
+		const arr = [];
+
+		for (let x = 0; x < (str.match(/♥|♦/g) || []).length; x++) {
+			arr.push("color:red");
+			arr.push("color:black");
+		}
+
+		console.log(str.replace(/♥|♦/g, "%c$&%c"), ...arr);
+	}
 }
 
 CardSet.standardPack = (withJokers) => {
-  let cardSet = new CardSet();
-  let suits = [
-    Card.SUIT_HEARTS,
-    Card.SUIT_SPADES,
-    Card.SUIT_CLUBS,
-    Card.SUIT_DIAMONDS
-  ];
-  suits.forEach((suit) => {
-    for (let rank = 1; rank <= 13; rank++) {
-        cardSet.addCard(new Card(Card.TYPE_NORMAL, suit, rank));
-    }
-  });
-  if (withJokers) {
-    cardSet.addCard(new Card(Card.TYPE_JOKER));
-    cardSet.addCard(new Card(Card.TYPE_JOKER));
-  }
-  return cardSet;
-}
+	const cardSet = new CardSet();
+	const suits = [
+		Card.SUIT_HEARTS,
+		Card.SUIT_SPADES,
+		Card.SUIT_CLUBS,
+		Card.SUIT_DIAMONDS,
+	];
+
+	suits.forEach((suit) => {
+		for (let rank = 1; rank <= 13; rank++) {
+			cardSet.addCard(new Card(Card.TYPE_NORMAL, suit, rank));
+		}
+	});
+
+	if (withJokers) {
+		cardSet.addCard(new Card(Card.TYPE_JOKER));
+		cardSet.addCard(new Card(Card.TYPE_JOKER));
+	}
+
+	return cardSet;
+};
