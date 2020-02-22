@@ -211,6 +211,74 @@ class CukasGame {
             "turnPhase": this.turnPhase
         };
     }
+
+    static saveToJSON(gameObj){
+        return JSON.stringify(gameObj, CukasGame.repl);
+    }
+
+    static loadFromJSON(gameSave){
+        return JSON.parse(gameSave, CukasGame.rev);
+    }
+
+    static repl(key, value){
+        if(key === "" && !CukasGame.repl.notFirst){
+            CukasGame.repl.notFirst = true;
+    
+            return {
+                created: new Date(),
+                saveData: value
+            };
+        }
+    
+        return value;
+    }
+
+    static rev(key, value){
+        if (CukasGame.rev.topLevel === undefined){
+            CukasGame.rev.topLevel = this;
+        }
+        
+        if(key === "created"){
+            return new Date(value);
+        }
+    
+        // Check for custom objects
+        if(typeof value === "object" && value !== null){
+            switch(value.type){
+                case "card":
+                    if(("suit" in value) && ("rank" in value) && ("cardType" in value)){
+                        return new Card(value.cardType, value.suit, value.rank);
+                    }
+    
+                    break;
+    
+                case "cardSet":
+                    if("cards" in value){
+                        return new CardSet(value.cards);
+                    }
+    
+                    break;
+    
+                case "player":
+                    if("hand" in value){
+                        return new CukasPlayer(value.hand);
+                    }
+    
+                    break;
+    
+                case "cukasGame":
+                    if(("gameState" in value) && ("players" in value) && ("deck" in value) && 
+                        ("trumpCard" in value) && ("playerCount" in value))
+                    {
+                        return new CukasGame(value.playerCount, value);
+                    }
+    
+                    break;
+            }
+        }
+    
+        return value;
+    }
 }
 
 CukasGame.STATE_UNINITIALIZED = 0;
@@ -268,65 +336,3 @@ CukasPlayerPerspective.STATE_ATTACKING = 0;//various states
 CukasPlayerPerspective.STATE_DEFENDING = 1;
 CukasPlayerPerspective.STATE_WAITING = 2;
 */
-
-function cukasGameRev(key, value){
-    if (cukasGameRev.topLevel === undefined){
-        cukasGameRev.topLevel = this;
-    }
-
-	let finalCall = key === "" && this[""] === cukasGameRev.topLevel;
-	
-	if(key === "created"){
-		return new Date(value);
-	}
-
-    // Check for custom objects
-    if(typeof value === "object" && value !== null){
-        switch(value.type){
-            case "card":
-                if(("suit" in value) && ("rank" in value) && ("cardType" in value)){
-                    return new Card(value.cardType, value.suit, value.rank);
-                }
-
-                break;
-
-            case "cardSet":
-                if("cards" in value){
-                    return new CardSet(value.cards);
-                }
-
-                break;
-
-            case "player":
-                if("hand" in value){
-                    return new CukasPlayer(value.hand);
-                }
-
-                break;
-
-            case "cukasGame":
-                if(("gameState" in value) && ("players" in value) && ("deck" in value) && 
-                    ("trumpCard" in value) && ("playerCount" in value))
-                {
-                    return new CukasGame(value.playerCount, value);
-                }
-
-                break;
-        }
-    }
-
-    return value;
-}
-
-function cukasGameRepl(key, value){
-    if(key === "" && !cukasGameRepl.notFirst){
-        cukasGameRepl.notFirst = true;
-
-        return {
-            created: new Date(),
-            saveData: value
-        };
-    }
-
-    return value;
-}

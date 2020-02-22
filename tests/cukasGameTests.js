@@ -33,8 +33,8 @@ const cukasGameSavePlayersTest = ClientFunction(()=>{
 
     originalGame.players[2] = new CukasPlayer(deck.getRandomSet(6));
 
-    const gameSave = JSON.stringify(originalGame, cukasGameRepl);
-    const loadedGame = JSON.parse(gameSave, cukasGameRev).saveData;
+    const gameSave = CukasGame.saveToJSON(originalGame);
+    const loadedGame = CukasGame.loadFromJSON(gameSave).saveData;
 
     return loadedGame.players[2].hand.cards[4].equals(originalGame.players[2].hand.cards[4]);
 });
@@ -48,8 +48,8 @@ const cukasGameSaveDeckTest = ClientFunction(()=>{
     let originalGame = new CukasGame(4);
     originalGame.deck = CardSet.standardPack();
 
-    const gameSave = JSON.stringify(originalGame, cukasGameRepl);
-    const loadedGame = JSON.parse(gameSave, cukasGameRev).saveData;
+    const gameSave = CukasGame.saveToJSON(originalGame);
+    const loadedGame = CukasGame.loadFromJSON(gameSave).saveData;
 
     return loadedGame.deck.indexOf(originalGame.deck.cards[21]) === 21;
 });
@@ -67,8 +67,8 @@ const cukasGameSaveOtherCardsTest = ClientFunction(()=>{
     originalGame.attack = deck.getRandomSet(3);
     originalGame.defence = deck.getRandomSet(2);
 
-    const gameSave = JSON.stringify(originalGame, cukasGameRepl);
-    const loadedGame = JSON.parse(gameSave, cukasGameRev).saveData;
+    const gameSave = CukasGame.saveToJSON(originalGame);
+    const loadedGame = CukasGame.loadFromJSON(gameSave).saveData;
 
     return (
         loadedGame.attack.indexOf(originalGame.attack.cards[2]) === 2 
@@ -88,8 +88,8 @@ const cukasGameSaveOtherValueTest = ClientFunction(()=>{
     originalGame.turnPhase = 0;
     originalGame.activePlayerId = 1;
 
-    const gameSave = JSON.stringify(originalGame, cukasGameRepl);
-    const loadedGame = JSON.parse(gameSave, cukasGameRev).saveData;
+    const gameSave = CukasGame.saveToJSON(originalGame);
+    const loadedGame = CukasGame.loadFromJSON(gameSave).saveData;
 
     return (
         originalGame.gameState === loadedGame.gameState
@@ -107,8 +107,8 @@ const cukasGameSaveTimestampTest = ClientFunction(()=>{
     let originalGame = new CukasGame(4);
 
     const saveTime = new Date();
-    const gameSave = JSON.stringify(originalGame, cukasGameRepl);
-    const loadedGame = JSON.parse(gameSave, cukasGameRev);
+    const gameSave = CukasGame.saveToJSON(originalGame);
+    const loadedGame = CukasGame.loadFromJSON(gameSave);
 
     return saveTime.getMinutes() === loadedGame.created.getMinutes();
 });
