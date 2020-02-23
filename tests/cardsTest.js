@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 import { ClientFunction } from 'testcafe';
-fixture `Cards Test`
+fixture `Card tests`
     .page `../index.html`;
 //https://devexpress.github.io/testcafe/documentation/test-api/obtaining-data-from-the-client/
 //Use this to write tests testing js functions.
@@ -96,24 +96,4 @@ test('cardObj Test', async t => {
     await t.expect(result).notOk("Card.isJoker() returned an incorrect result.");
     result = await cardCopyTest();
     await t.expect(result).ok("Copy is not equal to its' original.");
-});
-const cukasGameTest = ClientFunction(() => {
-    try {
-        new CukasGame(17);
-        return false;
-    } catch(e) {
-        return true;
-    }
-});
-test('CukasGame test', async t => {
-    const result = cukasGameTest();
-    await t.expect(result).ok("Incorrect amount of players was not handled!");
-});
-const cukasGameEqualsTest = ClientFunction(() => {
-    let x = new CukasGame(3);
-    return x.compareCards(new Card(Card.TYPE_NORMAL, 2, 6), new Card(Card.TYPE_NORMAL, 2, 7)) == -1;
-});
-test('CukasGame.compareCards test', async t => {
-    const result = cukasGameEqualsTest();
-    await t.expect(result).ok("Card B was not recognised as greater than A!");
 });

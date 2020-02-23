@@ -21,4 +21,9 @@ class CukasController {
         if (!placeholder) throw `Bad key: ${key}`;
         placeholder.innerText = text;
     }
+
+    updateModel(newModel){
+        this.model = newModel;
+        this.model.controller = this;
+    }
 }

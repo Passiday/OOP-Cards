@@ -11,11 +11,46 @@
 
       let cukasController;
 
-      function init() {
-          const cukasGame = new CukasGame(4); // Model
+      function newGame(playerCount, newController = false){
+        const cukasGame = new CukasGame(playerCount); // Model
+
+        if(cukasController === undefined || newController){
           const cukasContainer = document.getElementById("container"); // View
           cukasController = new CukasController(cukasGame, cukasContainer); // Controller
-          cukasGame.init();
+        } else {
+          cukasController.updateModel(cukasGame);
+        }
+
+        cukasGame.init();
+
+        return cukasGame;
+      }
+
+      function init() {
+        newGame(4);
+
+        // ----- Game save/load test -----
+        /*
+        const oldGame = newGame(4, true);
+        const oldGameJSONData = CukasGame.saveToJSON(oldGame); // Get current game as a JSON string using custom replacer to insert metadata
+
+        setTimeout(()=>{
+          newGame(4, true);
+        }, 5000);
+
+        setTimeout(()=>{
+          const loadedSave = CukasGame.loadFromJSON(oldGameJSONData); // Parse JSON string into CukasGame object using custom reviver
+          const loadedGame = loadedSave.saveData;
+
+          console.log("Game saved at " + loadedSave.created);
+          console.log(loadedGame);
+          
+          cukasController.updateModel(loadedGame); // Update controller with new model object
+          loadedGame.init(); // Initialize the loaded game (updates the deck and hands onscreen)
+        }, 10000);
+        */
+
+        console.log("Game initialized!");
       }
 
       window.addEventListener("load", init);
