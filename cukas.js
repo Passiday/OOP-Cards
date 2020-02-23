@@ -199,7 +199,7 @@ class CukasGame {
 
     toJSON(){
         return {
-            "type": "cukasGame",
+            "objectType": "CukasGame",
             "gameState": this.gameState,
             "players": this.players,
             "deck": this.deck,
@@ -213,11 +213,17 @@ class CukasGame {
     }
 
     static saveToJSON(gameObj){
-        return JSON.stringify(gameObj, CukasGame.repl);
+        const saveString = JSON.stringify(gameObj, CukasGame.repl);
+        delete CukasGame.repl.notFirst;
+
+        return saveString;
     }
 
     static loadFromJSON(gameSave){
-        return JSON.parse(gameSave, CukasGame.rev);
+        const loadObj = JSON.parse(gameSave, CukasGame.rev);
+        delete CukasGame.rev.topLevel;
+
+        return loadObj;
     }
 
     static repl(key, value){
@@ -244,29 +250,29 @@ class CukasGame {
     
         // Check for custom objects
         if(typeof value === "object" && value !== null){
-            switch(value.type){
-                case "card":
+            switch(value.objectType){
+                case "Card":
                     if(("suit" in value) && ("rank" in value) && ("cardType" in value)){
                         return new Card(value.cardType, value.suit, value.rank);
                     }
     
                     break;
     
-                case "cardSet":
+                case "CardSet":
                     if("cards" in value){
                         return new CardSet(value.cards);
                     }
     
                     break;
     
-                case "player":
+                case "CukasPlayer":
                     if("hand" in value){
                         return new CukasPlayer(value.hand);
                     }
     
                     break;
     
-                case "cukasGame":
+                case "CukasGame":
                     if(("gameState" in value) && ("players" in value) && ("deck" in value) && 
                         ("trumpCard" in value) && ("playerCount" in value))
                     {
@@ -310,7 +316,7 @@ class CukasPlayer {
 
     toJSON(){
         return {
-            "type": "player",
+            "objectType": "CukasPlayer",
             "hand": this.hand
         };
     }

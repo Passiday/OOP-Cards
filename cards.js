@@ -70,7 +70,7 @@ class Card {
 
   toJSON(){
     return {
-      "type": "card",
+      "objectType": "Card",
       "suit": this.suit,
       "rank": this.rank,
       "cardType": this.type
@@ -169,7 +169,7 @@ class CardSet {
 
   toJSON(){
     return {
-      "type": "cardSet",
+      "objectType": "CardSet",
       "cards": this.cards
     };
   }
